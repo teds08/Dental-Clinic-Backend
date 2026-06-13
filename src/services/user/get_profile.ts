@@ -1,0 +1,26 @@
+import { GetProfileRepository } from "../../repositories/user/index";
+import { hashPassword } from "../../utils/password.bcrypt";
+
+
+export class GetProfileService {
+  private repo = new GetProfileRepository();
+
+  async getProfile(userId: number) {
+  const user = await this.repo.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    password: "********",
+    contact_number: user.contact_number,
+    role: user.role_name,
+    created_at: user.created_at,
+    updated_at: user.updated_at
+  };
+}
+}
