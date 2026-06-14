@@ -3,7 +3,7 @@ import {FailedAttemptsUserRepository, LockUserRepository, FindEmailUserRepositor
 import { comparePassword } from "../../utils/password.bcrypt";
 import { generateToken } from "../../utils/jwt";
 
-export class AuthService {
+export class LoginAuthService {
   private findEmailUserRepository = new FindEmailUserRepository();
   private failedAttemptsUserRepository = new FailedAttemptsUserRepository();
   private lockUserRepository = new LockUserRepository();
@@ -62,4 +62,5 @@ export class AuthService {
 
   return { token };
 }
+
 }

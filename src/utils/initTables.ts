@@ -34,7 +34,11 @@ export const initTables = async () => {
       password TEXT NOT NULL,
       contact_number VARCHAR(20),
       role_id INT DEFAULT 2,
-
+      
+      otp_code VARCHAR(10),
+      otp_expires_at TIMESTAMP,
+      otp_attempts INTEGER DEFAULT 0,
+      
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW(),
       failed_login_attempts INT DEFAULT 0,
@@ -47,5 +51,19 @@ export const initTables = async () => {
     )
   `);
 
-  console.log("Tables + roles initialized");
+
+  // Session Table
+
+  await pool.query(`
+    
+    CREATE TABLE IF NOT EXISTS password_reset_sessions (
+      session_id UUID PRIMARY KEY,
+      email VARCHAR(255) NOT NULL,
+      otp_verified BOOLEAN DEFAULT FALSE,
+      expires_at TIMESTAMP NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    `);
+
+  console.log("Tables  initialized");
 };

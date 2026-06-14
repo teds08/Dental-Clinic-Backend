@@ -17,6 +17,10 @@ router.get("/get-bearer-profile",authenticate,(req, res) => userController.profi
 
 //auth routes
 router.post("/login", (req, res) =>authController.login(req, res));
+router.post("/forgot-password", (req, res) =>authController.requestOtp(req, res));
+router.post("/verify-otp", (req, res) =>authController.verifyOtp(req, res));
+router.post("/reset-password", (req, res) =>authController.resetPassword(req, res));
+
 
 //admin only
 router.get("/Get-All-User-Data",authenticate,adminOnly,(req, res) => adminController.getAll(req, res));
