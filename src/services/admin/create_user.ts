@@ -3,18 +3,17 @@ import { IUser } from "../../interfaces/user.interface";
 import { hashPassword } from "../../utils/password.bcrypt";
 
 
-export class CreateUserService {
+export class AdminCreateUserService {
   private repo = new CreateUserRepository();
 
-  async register(data: IUser) {
+  async adminCreateUser(data: IUser) {
   const hashedPassword = await hashPassword(
     data.password
   );
 
   return await this.repo.create({
     ...data,
-    password: hashedPassword,
-    role_id: 2
+    password: hashedPassword
   });
 }
 }

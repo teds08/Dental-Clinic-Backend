@@ -11,7 +11,7 @@ const authController = new AuthController();
 const adminController = new AdminController();
 
 //user routes
-router.post("/user-create", (req, res) => userController.create(req, res));
+router.post("/user-create", (req, res) => userController.register(req, res));
 router.put("/update-info/:id", (req, res) => userController.update(req, res));
 router.get("/get-bearer-profile",authenticate,(req, res) => userController.profile(req, res));
 
@@ -21,6 +21,7 @@ router.post("/login", (req, res) =>authController.login(req, res));
 //admin only
 router.get("/Get-All-User-Data",authenticate,adminOnly,(req, res) => adminController.getAll(req, res));
 router.patch("/Restore-User/:id",authenticate,adminOnly,(req, res) => adminController.restore(req, res));
+router.post("/admin-create",authenticate,adminOnly,(req, res) => adminController.adminCreate(req, res));
 
 router.delete("/Soft-Delete/:id",authenticate,adminOnly,(req, res) => adminController.softDelete(req, res));
 router.delete("/Hard-Delete/:id",authenticate,adminOnly,(req, res) => adminController.hardDelete(req, res));

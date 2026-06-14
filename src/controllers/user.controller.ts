@@ -1,25 +1,36 @@
 import { Request, Response } from "express";
 import { CreateUserService , UpdateUserService, GetProfileService  } from "../services/user/index";
-import { createUserSchema } from "../validators/user.validator";
+import { registerValidator } from "../validators/user.validator";
 
 const createUserService = new CreateUserService();
 const updateUserService = new UpdateUserService();
 const getProfileService = new GetProfileService();
 
 export class UserController {
-  async create(req: Request, res: Response) {
+  
+  async register(req: Request, res: Response) {
     try {
-      const validated = createUserSchema.parse(req.body);
-      const result = await createUserService.createUser(validated);
+      const validated =
+        registerValidator.parse(req.body);
 
-      res.status(201).json(result);
-    } catch (err: any) {
-      res.status(400).json({ error: err.message });
+      const user =
+        await createUserService.register({
+          ...validated,
+          password: validated.password
+        });
+
+      return res.status(201).json({
+        message: "User registered successfully",
+        data: user
+      });
+    } catch (error: any) {
+      return res.status(400).json({
+        message: error.message
+      });
     }
   }
 
 
-  
   async update(req: Request, res: Response) {
   const id = Number(req.params.id);
   const result = await updateUserService.updateUser(id, req.body);

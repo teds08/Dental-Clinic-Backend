@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
-import { FindAllUserAdminService , HardDeleteUserAdminService, SoftDeleteUserAdminService , RestoreUserAdminService} from "../services/admin/index";
+import { FindAllUserAdminService , HardDeleteUserAdminService, SoftDeleteUserAdminService , RestoreUserAdminService , AdminCreateUserService} from "../services/admin/index";
+import { adminCreateUserValidator } from "../validators/admin.validator";
 
 const findAllService = new FindAllUserAdminService();
 const hardDeleteService = new HardDeleteUserAdminService();
 const softDeleteService = new SoftDeleteUserAdminService();
 const restoreUserService = new RestoreUserAdminService();
+const adminCreateUserService = new AdminCreateUserService();
 
 export class AdminController {
   async getAll(req: Request, res: Response) {
@@ -85,6 +87,27 @@ export class AdminController {
     });
   }
 }
+
+   async adminCreate(req: Request, res: Response) {
+    try {
+      const validated =
+        adminCreateUserValidator.parse(req.body);
+
+      const user =
+        await adminCreateUserService.adminCreateUser(
+          validated
+        );
+
+      return res.status(201).json({
+        message: "User created successfully",
+        data: user
+      });
+    } catch (error: any) {
+      return res.status(400).json({
+        message: error.message
+      });
+    }
+  }
 
 
 }
