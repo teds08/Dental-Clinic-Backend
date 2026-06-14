@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { FindAllUserAdminService , HardDeleteUserAdminService, SoftDeleteUserAdminService} from "../services/admin/index";
+import { FindAllUserAdminService , HardDeleteUserAdminService, SoftDeleteUserAdminService , RestoreUserAdminService} from "../services/admin/index";
 
 const findAllService = new FindAllUserAdminService();
 const hardDeleteService = new HardDeleteUserAdminService();
 const softDeleteService = new SoftDeleteUserAdminService();
+const restoreUserService = new RestoreUserAdminService();
 
 export class AdminController {
   async getAll(req: Request, res: Response) {
@@ -67,5 +68,23 @@ export class AdminController {
     });
   }
 }
+
+   async restore(req: Request, res: Response) {
+  try {
+    const id = Number(req.params.id);
+
+    const user = await restoreUserService.restoreUser(id);
+
+    return res.status(200).json({
+      message: "User restored successfully",
+      data: user
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      message: error.message
+    });
+  }
+}
+
 
 }

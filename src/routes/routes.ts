@@ -20,6 +20,7 @@ router.post("/login", (req, res) =>authController.login(req, res));
 
 //admin only
 router.get("/Get-All-User-Data",authenticate,adminOnly,(req, res) => adminController.getAll(req, res));
+router.patch("/Restore-User/:id",authenticate,adminOnly,(req, res) => adminController.restore(req, res));
 
 router.delete("/Soft-Delete/:id",authenticate,adminOnly,(req, res) => adminController.softDelete(req, res));
 router.delete("/Hard-Delete/:id",authenticate,adminOnly,(req, res) => adminController.hardDelete(req, res));
