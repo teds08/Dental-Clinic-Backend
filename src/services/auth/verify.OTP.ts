@@ -1,17 +1,15 @@
-import {GetSessionRepository, OtpAttemptsRepository, LockUserForgotPasswordRepository, MarkOtpVerifiedRepository} from "../../repositories/auth/index";
+import {SessionRepository, ForgotPasswordRepository} from "../../repositories/auth/index";
 import {FindEmailUserRepository} from "../../repositories/user/index";
 
 
 export class VerifyOtpAuthService {
-  private getSessionRepository = new GetSessionRepository();
+  private sessionRepository = new SessionRepository();
   private findEmailUserRepository = new FindEmailUserRepository();
-  private otpAttemptsRepository = new OtpAttemptsRepository();
-  private lockUserForgotPasswordRepository = new LockUserForgotPasswordRepository();
-  private markOtpVerifiedRepository = new MarkOtpVerifiedRepository();
+  private forgotPasswordRepository = new ForgotPasswordRepository();
 
   
   async verifyOtp(sessionId: string, otp: string) {
-  const session = await this.getSessionRepository.getSession(sessionId);
+  const session = await this.sessionRepository.getSession(sessionId);
 
   if (!session) throw new Error("Session not found or expired");
 
@@ -31,17 +29,17 @@ export class VerifyOtpAuthService {
   }
 
   if (user.otp_code !== otp) {
-    await this.otpAttemptsRepository.incrementOtpAttempts(user.email);
+    await this.forgotPasswordRepository.incrementOtpAttempts(user.email);
 
     const attempts = (user.otp_attempts ?? 0) + 1;
 
     if (attempts >= 5) {
-      await this.lockUserForgotPasswordRepository.lockUser(user.email);
+      await this.forgotPasswordRepository.lockUser(user.email);
     }
 
     throw new Error("Invalid OTP");
   }
 
-  await this.markOtpVerifiedRepository.verifySession(sessionId);
+  await this.forgotPasswordRepository.verifySession(sessionId);
 }
 }

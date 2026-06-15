@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { OtpPasswordUpdateRepository, GetSessionRepository, DeleteSessionRepository} from "../../repositories/auth/index";
+import { ForgotPasswordRepository, SessionRepository} from "../../repositories/auth/index";
 
 
 
@@ -8,9 +8,8 @@ import { OtpPasswordUpdateRepository, GetSessionRepository, DeleteSessionReposit
 
 export class ResetPasswordAuthService {
 
-  private otpPasswordUpdateRepository = new OtpPasswordUpdateRepository();
-  private getSessionRepository = new GetSessionRepository();
-  private deleteSessionRepository = new DeleteSessionRepository();
+  private forgotPasswordRepository = new ForgotPasswordRepository();
+  private sessionRepository = new SessionRepository();
 
     
   async resetPassword(
@@ -22,7 +21,7 @@ export class ResetPasswordAuthService {
     throw new Error("Passwords do not match");
   }
 
-  const session = await this.getSessionRepository.getSession(sessionId);
+  const session = await this.sessionRepository.getSession(sessionId);
 
   if (!session) throw new Error("Session not found or expired");
 
@@ -32,8 +31,8 @@ export class ResetPasswordAuthService {
 
   const hashed = await bcrypt.hash(newPassword, 10);
 
-  await this.otpPasswordUpdateRepository.updatePassword(session.email, hashed);
+  await this.forgotPasswordRepository.updatePassword(session.email, hashed);
 
-  await this.deleteSessionRepository.deleteSession(sessionId);
+  await this.sessionRepository.deleteSession(sessionId);
 }
 }
