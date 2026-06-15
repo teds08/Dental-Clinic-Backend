@@ -12,5 +12,5 @@ export interface IUser {
   otp_code?: string;
   otp_expires_at?: Date | null;
   otp_attempts?: number;
-
+  otp_resend_available_at?: Date | null;
 }

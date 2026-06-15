@@ -76,5 +76,34 @@ export class ForgotPasswordRepository {
     [sessionId]
   );
 }
-   
+
+
+
+   // Update OTP code, expiration, and resend availability for a user
+    async updateOTP(
+  email: string,
+  otp: string,
+  otpExpiresAt: Date,
+  resendAvailableAt: Date
+) {
+  await pool.query(
+    `
+    UPDATE users
+    SET
+      otp_code = $1,
+      otp_expires_at = $2,
+      otp_attempts = 0,
+      otp_resend_available_at = $3
+    WHERE email = $4
+    `,
+    [
+      otp,
+      otpExpiresAt,
+      resendAvailableAt,
+      email
+    ]
+  );
+}
+
+
 }
