@@ -1,5 +1,5 @@
-import { pool } from "../../config/db";
-import { IUser } from "../../interfaces/user.interface";
+import { pool } from "../../../config/db";
+import { IUser } from "../../../interfaces/user.interface";
 
 export class CreateUserRepository {
     async create(data: IUser) {

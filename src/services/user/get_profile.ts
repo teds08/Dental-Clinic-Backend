@@ -1,5 +1,4 @@
 import { GetProfileRepository } from "../../repositories/user/index";
-import { hashPassword } from "../../utils/password.bcrypt";
 
 
 export class GetProfileService {

@@ -1,4 +1,4 @@
-import { pool } from "../../config/db";
+import { pool } from "../../../config/db";
 
 export class UpdateUserRepository {
     async update(id: number, data: {

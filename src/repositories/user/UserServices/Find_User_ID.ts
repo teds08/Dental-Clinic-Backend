@@ -1,4 +1,4 @@
-import { pool } from "../../config/db";
+import { pool } from "../../../config/db";
 
 
 export class FindByIdRepository {
@@ -18,4 +18,5 @@ export class FindByIdRepository {
   }
 
 
+  
 }

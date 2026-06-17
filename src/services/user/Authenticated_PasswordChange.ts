@@ -1,8 +1,6 @@
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import {transporter} from "../../config/node_mailer";
-
-
 import { AuthenticatedPasswordChangeRepository , FindByIdRepository } from "../../repositories/user/index";
 
 

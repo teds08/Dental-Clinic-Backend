@@ -1,5 +1,5 @@
 import { ForgotPasswordRepository , SessionRepository} from "../../repositories/auth/index";
-import {FindEmailUserRepository} from "../../repositories/user/find.email"
+import {FindEmailUserRepository} from "../../repositories/user/index";
 import crypto from "crypto";
 import {transporter} from "../../config/node_mailer";
 

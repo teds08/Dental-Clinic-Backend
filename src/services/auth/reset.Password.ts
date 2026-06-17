@@ -4,8 +4,6 @@ import { ForgotPasswordRepository, SessionRepository} from "../../repositories/a
 
 
 
-
-
 export class ResetPasswordAuthService {
 
   private forgotPasswordRepository = new ForgotPasswordRepository();
