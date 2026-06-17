@@ -15,6 +15,13 @@ router.post("/user-create", (req, res) => userController.register(req, res));
 router.put("/update-info/:id", (req, res) => userController.update(req, res));
 router.get("/get-bearer-profile",authenticate,(req, res) => userController.profile(req, res));
 
+// Authenticated password change routes
+router.post("/send-otp",authenticate,(req, res) => userController.sendOTP(req, res));
+router.post("/verify-otp",authenticate,(req, res) => userController.verifyOTP(req, res));
+router.post("/change-password",authenticate,(req, res) => userController.changePassword(req, res));
+router.post("/resend-otp",authenticate,(req, res) => userController.resendOTP(req, res));
+
+
 //auth routes
 router.post("/login", (req, res) =>authController.login(req, res));
 router.post("/forgot-password", (req, res) =>authController.requestOtp(req, res));

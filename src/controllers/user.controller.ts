@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { CreateUserService , UpdateUserService, GetProfileService  } from "../services/user/index";
+import { CreateUserService , UpdateUserService, GetProfileService , AuthenticatedPasswordChangeService  } from "../services/user/index";
 import { registerValidator } from "../validators/user.validator";
 
 const createUserService = new CreateUserService();
 const updateUserService = new UpdateUserService();
 const getProfileService = new GetProfileService();
+const authenticatedPasswordChangeService = new AuthenticatedPasswordChangeService();
 
 export class UserController {
   
@@ -39,18 +40,98 @@ export class UserController {
 }
 
 
-async profile(req: Request, res: Response) {
+  async profile(req: Request, res: Response) {
+    try {
+      const userId = res.locals.user.id;
+
+      const profile = await getProfileService.getProfile(userId);
+
+      return res.status(200).json({
+        message: "Profile fetched successfully",
+        data: profile
+      });
+    } catch (error: any) {
+      return res.status(500).json({
+        message: error.message
+      });
+    }
+  }
+
+
+
+  async sendOTP(req: Request, res: Response) {
   try {
     const userId = res.locals.user.id;
 
-    const profile = await getProfileService.getProfile(userId);
+    const result =
+      await authenticatedPasswordChangeService.sendPasswordChangeOTP(userId);
 
-    return res.status(200).json({
-      message: "Profile fetched successfully",
-      data: profile
-    });
+    return res.status(200).json(result);
   } catch (error: any) {
-    return res.status(500).json({
+    return res.status(400).json({
+      message: error.message
+    });
+  }
+}
+
+
+  async verifyOTP(req: Request, res: Response) {
+  try {
+    const userId = res.locals.user.id;
+
+    const result =
+      await authenticatedPasswordChangeService.verifyPasswordChangeOTP(
+        userId,
+        req.body.otp
+      );
+
+    return res.status(200).json(result);
+  } catch (error: any) {
+    return res.status(400).json({
+      message: error.message
+    });
+  }
+}
+
+
+  async changePassword(req: Request,res: Response) {
+  try {
+    const userId = res.locals.user.id;
+     console.log("userId:", userId);               // check this
+    console.log("body:", req.body); 
+    const result =
+      
+
+      await authenticatedPasswordChangeService.changePassword(
+        userId,
+        req.body.currentPassword,
+        req.body.newPassword,
+        req.body.confirmPassword
+      );
+
+    return res.status(200).json(result);
+  } catch (error: any) {
+    return res.status(400).json({
+      message: error.message
+    });
+  }
+}
+
+  async resendOTP(
+  req: Request,
+  res: Response
+) {
+  try {
+    const userId = res.locals.user.id;
+
+    const result =
+      await authenticatedPasswordChangeService.resendOTP(
+        userId
+      );
+
+    return res.status(200).json(result);
+  } catch (error: any) {
+    return res.status(400).json({
       message: error.message
     });
   }

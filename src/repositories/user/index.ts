@@ -5,3 +5,5 @@ export {FindEmailUserRepository} from "./find.email";
 export {ResetAttemptsUserRepository} from "./reset_attempts";
 export {UpdateUserRepository} from "./update_user";
 export {GetProfileRepository} from "./get_profile";
+export {AuthenticatedPasswordChangeRepository} from "./Authenticated_PasswordChange";
+export {FindByIdRepository} from "./Find_by_id";

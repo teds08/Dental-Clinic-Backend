@@ -40,6 +40,7 @@ export const initTables = async () => {
       otp_attempts INTEGER DEFAULT 0,
       otp_resend_available_at TIMESTAMP NULL,
       
+      password_change_verified BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW(),
       failed_login_attempts INT DEFAULT 0,

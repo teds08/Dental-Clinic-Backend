@@ -8,7 +8,8 @@ export interface IUser {
   
   failed_login_attempts?: number;
   locked_until?: Date | null;
-
+  password_change_verified?: boolean;
+  
   otp_code?: string;
   otp_expires_at?: Date | null;
   otp_attempts?: number;
