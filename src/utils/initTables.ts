@@ -1,15 +1,6 @@
 import { pool } from "../config/db";
 
 export const initTables = async () => {
-  // Roles table
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS roles (
-      role_id SERIAL PRIMARY KEY,
-      role_name VARCHAR(50) NOT NULL,
-      description TEXT
-    )
-  `);
-
   // Insert default roles (only if empty)
   await pool.query(`
     INSERT INTO roles (role_name, description)
@@ -17,10 +8,25 @@ export const initTables = async () => {
     WHERE NOT EXISTS (SELECT 1 FROM roles WHERE role_id = 1)
   `);
 
+  // Insert default user role (only if empty)
   await pool.query(`
     INSERT INTO roles (role_name, description)
     SELECT 'user', 'Default user role'
     WHERE NOT EXISTS (SELECT 1 FROM roles WHERE role_id = 2)
+  `);
+
+
+
+
+  
+  
+    // Roles table
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS roles (
+      role_id SERIAL PRIMARY KEY,
+      role_name VARCHAR(50) NOT NULL,
+      description TEXT
+    )
   `);
 
 
@@ -55,7 +61,6 @@ export const initTables = async () => {
 
 
   // Session Table
-
   await pool.query(`
     
     CREATE TABLE IF NOT EXISTS password_reset_sessions (
@@ -64,6 +69,23 @@ export const initTables = async () => {
       otp_verified BOOLEAN DEFAULT FALSE,
       expires_at TIMESTAMP NOT NULL,
       created_at TIMESTAMP DEFAULT NOW()
+    );
+    `);
+
+
+
+    // Services Table
+  await pool.query(`
+
+    CREATE TABLE IF NOT EXISTS services (
+      id SERIAL PRIMARY KEY,
+      image TEXT NOT NULL,
+      title VARCHAR(255) NOT NULL,
+      description TEXT NOT NULL,
+      price NUMERIC(10,2) NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW(),
+      deleted_at TIMESTAMP NULL
     );
     `);
 

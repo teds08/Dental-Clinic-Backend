@@ -1,1 +1,2 @@
+// User Repository
 export {AuthenticatedPasswordChangeRepository, CreateUserRepository, FailedAttemptsUserRepository, FindByIdRepository, FindEmailUserRepository, GetProfileRepository, LockUserRepository, ResetAttemptsUserRepository, UpdateUserRepository} from "../user/UserServices/index";
