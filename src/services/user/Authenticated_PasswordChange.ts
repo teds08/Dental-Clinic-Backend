@@ -119,7 +119,7 @@ export class AuthenticatedPasswordChangeService {
   };
 }
 
-
+  // Resend OTP for password change verification
     async resendOTP(userId: number) {
   const user =
     await this.FindByIdRepo.findById(userId);

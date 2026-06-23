@@ -1,27 +1,17 @@
 import { CreateServiceRepository } from "../../repositories/admin/index";
+import { IService } from "../../interfaces/service.interface";
 
-export class CreateServiceService {
-  private repository = new CreateServiceRepository();
+export class CreateService {
 
-  async createService(
-    data: {
-      title: string;
-      description: string;
-      price: number;
-    },
-    file: Express.Multer.File
-  ) {
-    if (!file) {
-      throw new Error("Image is required");
-    }
+  private repo = new CreateServiceRepository();
 
-    const imagePath = `/uploads/services/${file.filename}`;
+   async createService(data: IService) {
 
-    return await this.repository.create({
-      image: imagePath,
-      title: data.title,
-      description: data.description,
-      price: data.price
-    });
+    const result = await this.repo.create(data);
+
+    return {
+      message: "Service created successfully",
+      service: result
+    };
   }
 }

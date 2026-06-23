@@ -1,6 +1,17 @@
 import { pool } from "../config/db";
 
 export const initTables = async () => {
+
+    // Roles table
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS roles (
+      role_id SERIAL PRIMARY KEY,
+      role_name VARCHAR(50) NOT NULL,
+      description TEXT
+    )
+  `);
+
+
   // Insert default roles (only if empty)
   await pool.query(`
     INSERT INTO roles (role_name, description)
@@ -19,16 +30,6 @@ export const initTables = async () => {
 
 
   
-  
-    // Roles table
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS roles (
-      role_id SERIAL PRIMARY KEY,
-      role_name VARCHAR(50) NOT NULL,
-      description TEXT
-    )
-  `);
-
 
 
   // Users table
@@ -83,6 +84,7 @@ export const initTables = async () => {
       title VARCHAR(255) NOT NULL,
       description TEXT NOT NULL,
       price NUMERIC(10,2) NOT NULL,
+      image_public_id TEXT,
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW(),
       deleted_at TIMESTAMP NULL

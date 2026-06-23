@@ -18,6 +18,5 @@ app.use("/api", userRoutes);
 app.use("/api", adminRoutes);
 app.use("/api", guestRoutes);
 app.use("/api", serviceRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 export default app;

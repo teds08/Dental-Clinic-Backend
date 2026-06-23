@@ -8,12 +8,14 @@ const adminController = new AdminController();
 
 
 //admin only
-router.get("/show/users",authenticate,adminOnly,(req, res) => adminController.getAll(req, res));
+router.get("/active/users",authenticate,adminOnly,(req, res) => adminController.getAll(req, res));
 router.patch("/restore/user/:id",authenticate,adminOnly,(req, res) => adminController.restore(req, res));
 router.post("/admin/create",authenticate,adminOnly,(req, res) => adminController.adminCreate(req, res));
+router.get("/archive/users",authenticate,adminOnly,(req, res) => adminController.findArchivedUsers(req, res));
+
 
 //delete routes
-router.delete("/soft/delete/:id",authenticate,adminOnly,(req, res) => adminController.softDelete(req, res));
+router.patch("/soft/delete/:id",authenticate,adminOnly,(req, res) => adminController.softDelete(req, res));
 router.delete("/hard/delete/:id",authenticate,adminOnly,(req, res) => adminController.hardDelete(req, res));
 
 export default router;

@@ -1,7 +1,8 @@
 export interface IService {
   id?: number;
-  image: string;
   title: string;
   description: string;
   price: number;
+  image: string;
+  image_public_id?: string;
 }

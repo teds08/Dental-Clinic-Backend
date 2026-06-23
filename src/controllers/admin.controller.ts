@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { FindAllUserAdminService , HardDeleteUserAdminService, SoftDeleteUserAdminService , RestoreUserAdminService , AdminCreateUserService} from "../services/admin/index";
+import { FindAllUserAdminService , HardDeleteUserAdminService, SoftDeleteUserAdminService , RestoreUserAdminService , AdminCreateUserService, FindArchiveUsersService} from "../services/admin/index";
 import { adminCreateUserValidator } from "../validators/admin.validator";
 
 const findAllService = new FindAllUserAdminService();
@@ -7,8 +7,10 @@ const hardDeleteService = new HardDeleteUserAdminService();
 const softDeleteService = new SoftDeleteUserAdminService();
 const restoreUserService = new RestoreUserAdminService();
 const adminCreateUserService = new AdminCreateUserService();
+const findArchiveUsersService = new FindArchiveUsersService();
 
 export class AdminController {
+  
   async getAll(req: Request, res: Response) {
     try {
       const users = await findAllService.getUsers();
@@ -109,5 +111,23 @@ export class AdminController {
     }
   }
 
+   async findArchivedUsers(req: Request, res: Response) {
+
+    try {
+
+      const result =
+        await findArchiveUsersService.getArchivedUsers();
+
+      return res.status(200).json(result);
+
+    } catch (error: any) {
+
+      return res.status(400).json({
+        message: error.message
+      });
+
+    }
+
+  }
 
 }

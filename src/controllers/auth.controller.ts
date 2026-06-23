@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { LoginAuthService, ResendOtpAuthService, ForgotPasswordAuthService, ResetPasswordAuthService, VerifyOtpAuthService  } from "../services/auth/index";
-import { loginSchema } from "../validators/auth.validator";
+import { loginValidator } from "../validators/auth.validator";
 
 const loginAuthService = new LoginAuthService();
 const resendOtpAuthService = new ResendOtpAuthService();
@@ -13,7 +13,7 @@ export class AuthController {
 
  async login(req: Request, res: Response) {
     try {
-      const validated = loginSchema.parse(req.body);
+      const validated = loginValidator.parse(req.body);
 
       const result = await loginAuthService.login(
         validated.email,
