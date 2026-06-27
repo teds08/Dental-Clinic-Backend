@@ -32,10 +32,10 @@
 
 ## Feature Update MAY 30 2026
 - Features: Resend OTP `for Bearer Token Only`.
-          - Changes Added: Cooldown time for 5 mins.
+     - Changes Added: Cooldown time for 5 mins.
 
 
-- **Feature: Authentication , Password Recovery (for none `Bearer Token`) & User Profile Management**
+## Feature: Authentication , Password Recovery (for none `Bearer Token`) & User Profile Management
 - *JUNE 1 to JUNE 5 2026*
      - 1. User Login
           - Authenticate user credentials
@@ -64,7 +64,7 @@
           - Delete Session when user Successfully Change Password.
 
 
-- **Feature:  Admin User Management**
+## Feature:  Admin User Management
 - *JUNE 13  t0 JUNE 18 2026*
      - 1. User Management
           - Get all registered users
@@ -79,7 +79,7 @@
           - Remove user records from the database
 
 
-- **Feature: Service Management**
+## Feature: Service Management
 - *JUNE 20 to JUNE 24 2026*
      - 1.  Service CRUD Management
           - Create new services
@@ -109,7 +109,7 @@
 
 - Code : auth.middleware
      - Changes Added:
-          - add AuthRequest export in aut.middleware in line 4
+          - add AuthRequest export in auth.middleware in line 4
           - remove res.local.user.id or res.local.user
           - replace it into req.user
 
@@ -117,8 +117,8 @@
 
 
 ## API Documentation
-- 1. guest.routes.ts 
-- **POST /login**
+## guest.routes.ts 
+1. **POST /login**
 - *Description*
      - Authenticate an existing user.
 - Request Body Example
@@ -128,7 +128,7 @@
      - }
 - Response : Returns authenticated user token.
 
-- **POST /forgot/password**
+2. **POST /forgot/password**
 - *Description*
      - Starts the forgot password process. Sends `OTP` to user's `email`.
 
@@ -140,7 +140,7 @@
      -   `"otp":"325123"`
      - }
 
-- **POST /reset/password**
+3. **POST /reset/password**
 - *Description*
      - Changes password after `OTP` verification.
 - Request Body Example
@@ -149,12 +149,12 @@
      -    `"confirmPassword":"new123"`
      - }
 
-- **POST /resend/otp**
+4. **POST /resend/otp**
 - *Description*
      - Resends OTP if the previous one expires or the user didn't get the 1st otp.
 
-- 2. user.routes.ts
-- **POST /create**
+## user.routes.ts
+1. **POST /create**
 - *Description*
      - Create/Register a new user.
 - Request Body Example
@@ -165,7 +165,7 @@
      -    `"contact_number":"09xx-32xx-4xx"`
      - }
 
-- **PUT /update/info/:id**
+2. **PUT /update/info/:id**
 - *Description*
      - Update user information except for password.
 - Request Body Example
@@ -173,15 +173,15 @@
      -    `"username":"new John Doe"`
      - }
 
-- **GET /profile**
+3. **GET /profile**
 - *Description*
      - Get logged-in user's profile.
 
-- **POST /auth/user/send/otp**
+4. **POST /auth/user/send/otp**
 - *Description*
      - Send OTP for logged-in user for password change.
 
-- **POST /auth/user/verify/otp**
+5. **POST /auth/user/verify/otp**
 - *Description*
      - Verify OTP before changing password.
 - Request Body Example
@@ -189,7 +189,7 @@
      -    `"otp":"322xx32"`
      - }`
 
-- **POST /auth/user/change/password**
+6. **POST /auth/user/change/password**
 - *Description*
      - Change password after OTP verification.
 - Request Body Example
@@ -199,22 +199,22 @@
      -    `"confirmPassword":"newpass123"`
      - }`
 
-- **POST /auth/user/resend/otp**
+7. **POST /auth/user/resend/otp**
 - *Description*
      - Resend password-change OTP.
 
-- 3. admin.routes.ts
-- **GET /active/users**
+## admin.routes.ts
+1. **GET /active/users**
 - *Description*
      - Get all active users.
 
-- **PATCH /restore/user/:id**
+2. **PATCH /restore/user/:id**
 - *Description*
      - Restore a soft-deleted user.
 - Example:
      - `PATCH /restore/user/10`
 
-- **POST /admin/create**
+3. **POST /admin/create**
 - *Description*
      - Create a new admin/user account.
 - Request Body Example: `1. admin 2. user`
@@ -226,25 +226,25 @@
      -    `"role_id":"1 or 2"`
      - }
 
-- **GET /archive/users**
+4. **GET /archive/users**
 - *Description*
      - View archived/soft-deleted users.
 
-- **PATCH /soft/delete/:id**
+5. **PATCH /soft/delete/:id**
 - *Description*
      - Soft delete a user.
 - Parameter
      - `:id = user ID`
 
-- **DELETE /hard/delete/:id**
+6. **DELETE /hard/delete/:id**
 - *Description*
      - Permanently remove a user.
 - Parameter
      - `:id = user ID`
 
 
-- 4. service.routes.ts
-- **POST /create/services**
+## service.routes.ts
+1. **POST /create/services**
 - *Description*
      - Create a new dental service.
 - Request Body Example
@@ -253,11 +253,12 @@
      -    `"description": "lorem ipsum, lorem ipsumlorem lorem ipsum lorem ipsum",`
      -    `"price": 3500,`
      -    `"image": "url in Cloudinary",`
-     -    `"image_public_id":"public id in Cloudinary"`
+     -    `"image_public_id":"public id in Cloudinary",`
+     -    `"points": 5`
      - }
 - `Step 1 -> upload image in Cloudinary -> Get the url and public id -> paste it in Request Body.`
 
-- **PATCH /update/services/:id**
+2. **PATCH /update/services/:id**
 - *Description
      - Update existing service information.
 - Request Body Example
@@ -266,25 +267,25 @@
      - }
 - Parameter -> `:id = service ID`
 
-- **PATCH /archive/services/:id**
+3. **PATCH /archive/services/:id**
 - *Description*
      - Archive/SoftDelete a service.
 - Parameter -> `:id = service ID`
 
-- **PATCH /restore/services/:id**
+4. **PATCH /restore/services/:id**
 - *Description
      - Restore archived service.
 - Parameter -> `:id = service ID`
 
-- **GET /services/archive**
+5. **GET /services/archive**
 - *Description*
      - Retrieve archived/softdeleted services.
 
-- **GET /active/services**
+6. **GET /active/services**
 - *Description*
      - Get all active dental services.
 
-- **DELETE /delete/service/:id**
+7. **DELETE /delete/service/:id**
 - *Description*
      - Permanently delete a service.
 - Parameter -> `:id = service ID`
