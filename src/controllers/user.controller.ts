@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { CreateUserService , UpdateUserService, GetProfileService , AuthenticatedPasswordChangeService  } from "../services/user/index";
 import { registerValidator } from "../validators/user.validator";
+import { AuthRequest } from "../middlewares/auth.middleware";
+
 
 const createUserService = new CreateUserService();
 const updateUserService = new UpdateUserService();
@@ -40,9 +42,9 @@ export class UserController {
 }
 
 
-  async profile(req: Request, res: Response) {
+  async profile(req: AuthRequest, res: Response) {
     try {
-      const userId = res.locals.user.id;
+      const userId = req.user.id;
 
       const profile = await getProfileService.getProfile(userId);
 
@@ -59,9 +61,9 @@ export class UserController {
 
 
 
-  async sendOTP(req: Request, res: Response) {
+  async sendOTP(req: AuthRequest, res: Response) {
   try {
-    const userId = res.locals.user.id;
+    const userId = req.user.id;
 
     const result =
       await authenticatedPasswordChangeService.sendPasswordChangeOTP(userId);
@@ -75,9 +77,9 @@ export class UserController {
 }
 
 
-  async verifyOTP(req: Request, res: Response) {
+  async verifyOTP(req: AuthRequest, res: Response) {
   try {
-    const userId = res.locals.user.id;
+    const userId = req.user.id;
 
     const result =
       await authenticatedPasswordChangeService.verifyPasswordChangeOTP(
@@ -94,9 +96,9 @@ export class UserController {
 }
 
 
-  async changePassword(req: Request,res: Response) {
+  async changePassword(req: AuthRequest ,res: Response) {
   try {
-    const userId = res.locals.user.id;
+    const userId = req.user.id;
      console.log("userId:", userId);               // check this
     console.log("body:", req.body); 
     const result =
@@ -117,12 +119,10 @@ export class UserController {
   }
 }
 
-  async resendOTP(
-  req: Request,
-  res: Response
-) {
+
+  async resendOTP(req: AuthRequest, res: Response) {
   try {
-    const userId = res.locals.user.id;
+    const userId = req.user.id;
 
     const result =
       await authenticatedPasswordChangeService.resendOTP(

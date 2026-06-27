@@ -5,4 +5,5 @@ export interface IService {
   price: number;
   image: string;
   image_public_id?: string;
+  points: number;
 }

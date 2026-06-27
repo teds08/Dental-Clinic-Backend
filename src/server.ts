@@ -1,6 +1,6 @@
 import app from "./app";
 import dotenv from "dotenv";
-import { initTables } from "./utils/initTables";
+import { initTables } from "./utils/init.tables";
 
 dotenv.config();
 

@@ -15,4 +15,276 @@
 - 
 - **Features Added**
 - 
-       
+
+## Features Documentation
+- **Feature: Authentication & Password Management**
+- *MAY 29 2026*
+     - 1.  User Registration
+          -  Register new user account.
+          -  Validate user information.
+          -  Store encrypted password.
+     - 2. Password Management with NodeMailer for OTP Email Verification System
+          - Change password using Bearer Token authentication.
+          - Send OTP through Nodemailer.
+          -  Verify OTP.
+          -  Resend OTP.
+          - Allow password change after successful OTP verification.
+
+## Feature Update MAY 30 2026
+- Features: Resend OTP `for Bearer Token Only`.
+          - Changes Added: Cooldown time for 5 mins.
+
+
+- **Feature: Authentication , Password Recovery (for none `Bearer Token`) & User Profile Management**
+- *JUNE 1 to JUNE 5 2026*
+     - 1. User Login
+          - Authenticate user credentials
+          - Generate Bearer Token for secure access
+          - Validate user authentication
+     - 2. User Profile Management
+          - Get user profile.
+          - Update user profile information except for password `(Token Bearer)`.
+     - 3. Account Recovery (Email OTP using Nodemailer)
+          - Request OTP
+          - Verify OTP
+          - Reset Password
+          - Resend OTP
+
+## Feature Update JUNE 7 to JUNE 10 2026
+- Features: Login, Verify Otp, Resend Otp
+     - Changes Added: 
+          - `Anti Brute Force` 5 attempts.
+          - Locked User / Giving a Cooldown Time for 5 mins
+     - Features : Account Recovery 
+          Changes Added:  
+          - Now in Session Table
+          - id int into uuid
+     - Bug Fixed
+          - Fix Bug where user can create multiple Session.
+          - Delete Session when user Successfully Change Password.
+
+
+- **Feature:  Admin User Management**
+- *JUNE 13  t0 JUNE 18 2026*
+     - 1. User Management
+          - Get all registered users
+          - View user information
+          - Create new users or admin accounts
+     - 2. User Archive Management
+          - Archive users using soft delete
+          - View archived users
+          - Restore archived users
+     - 3. User Deletion Management
+          - Permanently delete users using hard delete
+          - Remove user records from the database
+
+
+- **Feature: Service Management**
+- *JUNE 20 to JUNE 24 2026*
+     - 1.  Service CRUD Management
+          - Create new services
+          - Get all available services
+          - Update service information
+     - 2.  Service Archive Management
+          - Archive services using soft delete
+          - View archived service list
+          - Restore archived services
+     - 3. Service Deletion Management
+          - Permanently delete services using hard delete
+          - Remove service records from the database
+
+## Feature: Update June 25 2026
+- Features: Service Management
+     - Changes Added: 
+          - Refactor Service code change local store image into cloud
+          - Delete Package multer
+          - Integrate to the Cloudinary where we store image through cloud
+     - Bug Fixed:
+          - Where image is not deleted in cloudinary website when calling Delete/Update method.
+
+## Feature and Modify CODE Update JUNE 27 2026
+- Features: Service Management
+     - Changes Added:
+          - Add a points for every services created
+
+- Code : auth.middleware
+     - Changes Added:
+          - add AuthRequest export in aut.middleware in line 4
+          - remove res.local.user.id or res.local.user
+          - replace it into req.user
+
+
+
+
+## API Documentation
+- 1. guest.routes.ts 
+- **POST /login**
+- *Description*
+     - Authenticate an existing user.
+- Request Body Example
+     - {
+     - `"email": "user@gmail.com",`
+     - `"password": "password123"`
+     - }
+- Response : Returns authenticated user token.
+
+- **POST /forgot/password**
+- *Description*
+     - Starts the forgot password process. Sends `OTP` to user's `email`.
+
+- **POST /verify/otp**
+- *Description*
+     - Verifies OTP during password recovery.
+- Request Body Example
+     - {
+     -   `"otp":"325123"`
+     - }
+
+- **POST /reset/password**
+- *Description*
+     - Changes password after `OTP` verification.
+- Request Body Example
+     - {
+     -    `"newPassword":"new123",`
+     -    `"confirmPassword":"new123"`
+     - }
+
+- **POST /resend/otp**
+- *Description*
+     - Resends OTP if the previous one expires or the user didn't get the 1st otp.
+
+- 2. user.routes.ts
+- **POST /create**
+- *Description*
+     - Create/Register a new user.
+- Request Body Example
+     - {
+     -    `"username":"john",`
+     -    `"email":"john@gmail.com",`
+     -    `"password":"123456",`
+     -    `"contact_number":"09xx-32xx-4xx"`
+     - }
+
+- **PUT /update/info/:id**
+- *Description*
+     - Update user information except for password.
+- Request Body Example
+     - {
+     -    `"username":"new John Doe"`
+     - }
+
+- **GET /profile**
+- *Description*
+     - Get logged-in user's profile.
+
+- **POST /auth/user/send/otp**
+- *Description*
+     - Send OTP for logged-in user for password change.
+
+- **POST /auth/user/verify/otp**
+- *Description*
+     - Verify OTP before changing password.
+- Request Body Example
+     - `{
+     -    `"otp":"322xx32"`
+     - }`
+
+- **POST /auth/user/change/password**
+- *Description*
+     - Change password after OTP verification.
+- Request Body Example
+     - `{
+     -    `"currentPassword":"123pass",`
+     -    `"newPassword":"newpass123",`
+     -    `"confirmPassword":"newpass123"`
+     - }`
+
+- **POST /auth/user/resend/otp**
+- *Description*
+     - Resend password-change OTP.
+
+- 3. admin.routes.ts
+- **GET /active/users**
+- *Description*
+     - Get all active users.
+
+- **PATCH /restore/user/:id**
+- *Description*
+     - Restore a soft-deleted user.
+- Example:
+     - `PATCH /restore/user/10`
+
+- **POST /admin/create**
+- *Description*
+     - Create a new admin/user account.
+- Request Body Example: `1. admin 2. user`
+     - {
+     -    `"username":"john",`
+     -    `"email":"john@gmail.com",`
+     -    `"password":"123456",`
+     -    `"contact_number":"09xx-32xx-4xx",`
+     -    `"role_id":"1 or 2"`
+     - }
+
+- **GET /archive/users**
+- *Description*
+     - View archived/soft-deleted users.
+
+- **PATCH /soft/delete/:id**
+- *Description*
+     - Soft delete a user.
+- Parameter
+     - `:id = user ID`
+
+- **DELETE /hard/delete/:id**
+- *Description*
+     - Permanently remove a user.
+- Parameter
+     - `:id = user ID`
+
+
+- 4. service.routes.ts
+- **POST /create/services**
+- *Description*
+     - Create a new dental service.
+- Request Body Example
+     - {
+     -    `"title": "Orthodontics",`
+     -    `"description": "lorem ipsum, lorem ipsumlorem lorem ipsum lorem ipsum",`
+     -    `"price": 3500,`
+     -    `"image": "url in Cloudinary",`
+     -    `"image_public_id":"public id in Cloudinary"`
+     - }
+- `Step 1 -> upload image in Cloudinary -> Get the url and public id -> paste it in Request Body.`
+
+- **PATCH /update/services/:id**
+- *Description
+     - Update existing service information.
+- Request Body Example
+     - {
+     -    `"price":"300"`
+     - }
+- Parameter -> `:id = service ID`
+
+- **PATCH /archive/services/:id**
+- *Description*
+     - Archive/SoftDelete a service.
+- Parameter -> `:id = service ID`
+
+- **PATCH /restore/services/:id**
+- *Description
+     - Restore archived service.
+- Parameter -> `:id = service ID`
+
+- **GET /services/archive**
+- *Description*
+     - Retrieve archived/softdeleted services.
+
+- **GET /active/services**
+- *Description*
+     - Get all active dental services.
+
+- **DELETE /delete/service/:id**
+- *Description*
+     - Permanently delete a service.
+- Parameter -> `:id = service ID`

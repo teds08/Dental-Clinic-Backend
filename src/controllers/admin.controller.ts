@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { FindAllUserAdminService , HardDeleteUserAdminService, SoftDeleteUserAdminService , RestoreUserAdminService , AdminCreateUserService, FindArchiveUsersService} from "../services/admin/index";
-import { adminCreateUserValidator } from "../validators/admin.validator";
+import { adminCreateUserValidator } from "../validators/admin.service.validator";
 
 const findAllService = new FindAllUserAdminService();
 const hardDeleteService = new HardDeleteUserAdminService();

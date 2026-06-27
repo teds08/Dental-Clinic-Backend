@@ -1,8 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+export interface AuthRequest extends Request { 
+  user?: any;
+}
+
+
 export const authenticate = (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -20,7 +25,7 @@ export const authenticate = (
       process.env.JWT_SECRET as string
     );
 
-    res.locals.user = decoded;
+    req.user = decoded;
 
     next();
   } catch {

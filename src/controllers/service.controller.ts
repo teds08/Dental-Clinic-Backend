@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { CreateService, UpdateService, SoftDeleteService, RestoreService, ArchiveListService, GetAllServiceService, DeletePermanentService} from "../services/manageService/index";
-import {ServiceValidator} from "../validators/service.validator";
-import {updateServiceValidator} from "../validators/update.service.validator";
+import { CreateService, UpdateService, SoftDeleteService, RestoreService, ArchiveListService, GetAllServiceService, DeletePermanentService} from "../services/manageservice/index";
+import {CreateServiceValidator, UpdateServiceValidator} from "../validators/admin.service.validator";
 
 export class ServiceController {
   private Create = new CreateService();
@@ -13,11 +12,11 @@ export class ServiceController {
   private DeletePermanent = new DeletePermanentService();
 
 
-   async create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
 
     try {
 
-      const validatedData = ServiceValidator.parse({
+      const validatedData = CreateServiceValidator.parse({
         ...req.body,
         price: Number(req.body.price) 
       });
@@ -44,7 +43,7 @@ export class ServiceController {
 
       const id = Number(req.params.id);
 
-      const data = updateServiceValidator.parse(req.body);
+      const data = UpdateServiceValidator.parse(req.body);
 
       const result =
         await this.Update.updateService(id, data);

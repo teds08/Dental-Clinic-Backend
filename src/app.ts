@@ -1,9 +1,8 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
 import userRoutes from "./routes/user.routes";
 import adminRoutes from "./routes/admin.routes";
-import guestRoutes from "./routes/guest.routes";
+import publicRoutes from "./routes/public.routes"
 import serviceRoutes from "./routes/service.routes";
 
 
@@ -16,7 +15,7 @@ app.use(express.json());
 
 app.use("/api", userRoutes);
 app.use("/api", adminRoutes);
-app.use("/api", guestRoutes);
+app.use("/api", publicRoutes);
 app.use("/api", serviceRoutes);
 
 export default app;
