@@ -27,7 +27,7 @@ export class ForgotPasswordAuthService {
   await this.forgotPasswordRepository.saveOTP(email, otp, expires);
 
   // Delete Old Sessions and Create New Session
-  await this.sessionRepository.deleteSessionsByEmail(email);
+  await this.sessionRepository.deleteOldSession(email);
   await this.sessionRepository.createSession(
     sessionId,
     email,

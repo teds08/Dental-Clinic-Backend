@@ -51,7 +51,7 @@ export class SessionRepository {
 
 
 
-    async deleteSessionsByEmail(email: string) {
+    async deleteOldSession(email: string) {
   await pool.query(
     `
     DELETE FROM password_reset_sessions

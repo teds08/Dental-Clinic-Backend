@@ -114,7 +114,10 @@
           - replace it into req.user
 
 
-## 
+## Feature: Admin Coupon Management -> Create Coupon
+- *JUNE 29 2026*
+     - Create Event / Normal Coupon.
+
 
 
 
@@ -251,7 +254,6 @@
 - Parameter
      - `:id = user ID`
 
-
 ## service.routes.ts
 1. **POST /create/services**
 - *Description*
@@ -298,3 +300,22 @@
 - *Description*
      - Permanently delete a service.
 - Parameter -> `:id = service ID`
+
+## Coupon Creation in admin.routes.ts
+
+1. **POST/create/coupons**
+     - *Description:*
+          - Create an Event / Normal Coupon
+     - Request Body Example of Event Coupon:
+          - {
+          - `"name":"Christmas Sale",`
+          - `"type":"EVENT",`
+          - `"discount_percent":40`
+          - }
+     - Request Body Example of Normal Coupon:
+          - {
+          - `"name":"Reward Coupon",`
+          - `"type":"NORMAL",`
+          - `"discount_percent":5,`
+          - `"required_points":30`
+          - }
