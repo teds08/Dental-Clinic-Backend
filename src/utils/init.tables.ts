@@ -94,6 +94,26 @@ export const initTables = async () => {
     `);
 
   
+    //admin coupon creation
+    await pool.query(`
+      
+    CREATE TABLE IF NOT EXISTS coupons (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    discount_percent INT NOT NULL,
+    required_points INT DEFAULT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+      );
+      `);
+
+
+
+
+
+
 
 
 

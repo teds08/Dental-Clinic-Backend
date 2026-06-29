@@ -3,3 +3,6 @@ export {FindAllRepository , HardDeleteRepository, SoftDeleteRepository, RestoreU
 
 // Manage Services
 export {CreateServiceRepository, UpdateServiceRepository, FindServiceRepository, SoftDeleteServiceRepository, RestoreServiceRepository, ArchiveListRepository, GetAllServiceRepository, DeletePermanentRepository} from "./ManageServices/index";
+
+// Manage Coupon
+export {CreateCouponRepository} from "./manageCoupon/create.coupon"
