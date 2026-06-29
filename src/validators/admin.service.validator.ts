@@ -13,7 +13,8 @@ export const UpdateServiceValidator = z.object({
   title: z.string().min(3).optional(),
   description: z.string().min(10).optional(),
   price: z.coerce.number().positive().optional(),
-  image: z.string().url().optional()
+  image: z.string().url().optional(),
+  points: z.coerce.number().min(1).optional()
 });
 
 export const adminCreateUserValidator = z.object({

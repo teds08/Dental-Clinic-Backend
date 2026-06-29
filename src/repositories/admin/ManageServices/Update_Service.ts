@@ -3,7 +3,6 @@ import { pool } from "../../../config/db";
 export class UpdateServiceRepository {
 
   async update(id: number, data: any) {
-
     const result = await pool.query(
       `
       UPDATE services
@@ -13,8 +12,9 @@ export class UpdateServiceRepository {
         price = COALESCE($3, price),
         image = COALESCE($4, image),
         image_public_id = COALESCE($5, image_public_id),
+        points = COALESCE($6, points),
         updated_at = NOW()
-      WHERE id = $6
+      WHERE id = $7
       RETURNING *
       `,
       [
@@ -23,8 +23,10 @@ export class UpdateServiceRepository {
         data.price,
         data.image,
         data.image_public_id,
+        data.points,
         id
       ]
+      
     );
 
     return result.rows[0];

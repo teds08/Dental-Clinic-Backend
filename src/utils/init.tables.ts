@@ -2,7 +2,9 @@ import { pool } from "../config/db";
 
 export const initTables = async () => {
 
-    // Roles table
+  try{
+
+      // Roles table
   await pool.query(`
     CREATE TABLE IF NOT EXISTS roles (
       role_id SERIAL PRIMARY KEY,
@@ -30,7 +32,6 @@ export const initTables = async () => {
 
 
   
-
 
   // Users table
   await pool.query(`
@@ -92,9 +93,15 @@ export const initTables = async () => {
     );
     `);
 
+  
 
 
 
+
+    console.log("Tables  initialized");
+  }
+  catch(error){
+    console.error("Table Error", error);
+  }
     
-  console.log("Tables  initialized");
 };

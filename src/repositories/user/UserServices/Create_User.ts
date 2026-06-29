@@ -5,20 +5,10 @@ export class CreateUserRepository {
     async create(data: IUser) {
     const result = await pool.query(
       `
-      INSERT INTO users (
-        username,
-        email,
-        password,
-        contact_number,
-        role_id
-      )
+      INSERT INTO users (username,email,password,contact_number,role_id)
       VALUES ($1,$2,$3,$4,$5)
-      RETURNING
-        id,
-        username,
-        email,
-        role_id,
-        created_at
+      RETURNING 
+      id,username,email,role_id,created_at
       `,
       [
         data.username,
@@ -31,5 +21,6 @@ export class CreateUserRepository {
 
     return result.rows[0];
   }
+
 
 }

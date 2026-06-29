@@ -19,15 +19,15 @@
 ## Features Documentation
 - **Feature: Authentication & Password Management**
 - *MAY 29 2026*
-     - 1.  User Registration
-          -  Register new user account.
-          -  Validate user information.
-          -  Store encrypted password.
+     - 1. User Registration
+          - Register new user account.
+          - Validate user information.
+          - Store encrypted password.
      - 2. Password Management with NodeMailer for OTP Email Verification System
           - Change password using Bearer Token authentication.
           - Send OTP through Nodemailer.
-          -  Verify OTP.
-          -  Resend OTP.
+          - Verify OTP.
+          - Resend OTP.
           - Allow password change after successful OTP verification.
 
 ## Feature Update MAY 30 2026
@@ -65,7 +65,7 @@
 
 
 ## Feature:  Admin User Management
-- *JUNE 13  t0 JUNE 18 2026*
+- *JUNE 13  to JUNE 18 2026*
      - 1. User Management
           - Get all registered users
           - View user information
@@ -102,7 +102,7 @@
      - Bug Fixed:
           - Where image is not deleted in cloudinary website when calling Delete/Update method.
 
-## Feature and Modify CODE Update JUNE 27 2026
+## Feature Update and Modify CODE JUNE 27 2026
 - Features: Service Management
      - Changes Added:
           - Add a points for every services created
@@ -114,9 +114,18 @@
           - replace it into req.user
 
 
+## 
 
 
-## API Documentation
+
+
+
+
+
+
+
+
+# API Documentation
 ## guest.routes.ts 
 1. **POST /login**
 - *Description*
@@ -263,7 +272,7 @@
      - Update existing service information.
 - Request Body Example
      - {
-     -    `"price":"300"`
+     -    `"price":300`
      - }
 - Parameter -> `:id = service ID`
 
