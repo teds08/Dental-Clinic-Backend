@@ -24,6 +24,13 @@ router.delete("/hard/delete/:id",authenticate,adminOnly,(req, res) => adminContr
 
 //coupon routes
 router.post("/coupons",authenticate,adminOnly,(req,res)=>couponController.createCoupon(req,res));
+router.get("/all/coupons",authenticate,adminOnly,(req,res)=>couponController.getAllCoupons(req,res));
+router.put("/update/coupons/:id",authenticate,adminOnly,(req,res)=>couponController.updateCoupon(req,res));
+router.patch("/status/coupons/:id",authenticate,adminOnly,(req,res)=>couponController.updateCouponStatus(req,res));
+router.delete("/delete/coupons/:id",authenticate,adminOnly,(req,res)=>couponController.deleteCoupon(req,res));
+
+
+
 
 
 export default router;

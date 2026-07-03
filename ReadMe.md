@@ -114,15 +114,28 @@
           - replace it into req.user
 
 
-## Feature: Admin Coupon Management -> Create Coupon
-- *JUNE 29 2026*
+## Feature: Admin Coupon Management
+- *Create Coupon JUNE 29 2026*
      - Create Event / Normal Coupon.
+     - Admin Access Only
 
+- *Get All Coupons JUNE 30 2026*
+     - Getting all types of Coupon `Event | Normal`.
+     - Admin Access Only
 
+- *Update Coupons July 1 2026*
+     - Update Multiple/Single Data
+     - Admin Access Only
 
+- *Set Status Coupons*
+     - set Coupon to Active or Not.
+     - Archive a coupon.
+     - Admin Access Only.
 
+- *Delete Coupon*
+     - Permanently Delete the coupon from the database.
 
-
+##
 
 
 
@@ -319,3 +332,33 @@
           - `"discount_percent":5,`
           - `"required_points":30`
           - }
+
+2. **GET /all/coupons**
+     - *Description:*
+          - get all types of coupon `admin only`.
+          - Place the `Session Token of the admin in POSTMAN or ThunderClient`.
+
+3. **PUT /update/coupons/id**
+     - *Description*
+          - Can Update all Data `Multiple/Single`.
+          - `Admin` Token Bearer Only.
+     - Request Body Example of Update:
+          - {
+          - `"name":"Christmas Promo Updated",`
+          - `"discount_percent":30`
+          - }
+
+4. **PATCH /status/coupon/id**
+     - *Description*
+          - Can Update the status of Coupon `Active/Not Active`
+          - Archive A Coupon
+          - `Admin` Token Bearer Only.
+     - Request Body Example of Status:
+          - {
+          - `"is_active":false/true`
+          - }
+
+5. **DELETE /delete/coupons/id**
+     - *Description*
+          - Delete Coupon active or Not Active
+          - Admin Only
