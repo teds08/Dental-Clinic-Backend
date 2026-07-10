@@ -6,12 +6,26 @@ export class FindServiceRepository {
 
     const result = await pool.query(
       `
-      SELECT * FROM services
-      WHERE id = $1 AND deleted_at IS NULL
+      SELECT
+        id,
+        title,
+        description,
+        price,
+        points,
+        duration_minutes,
+        image,
+        image_public_id,
+        created_at,
+        updated_at
+      FROM services
+      WHERE id = $1
+        AND deleted_at IS NULL
       `,
       [id]
     );
 
     return result.rows[0];
+
   }
+
 }

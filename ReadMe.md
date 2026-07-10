@@ -30,7 +30,7 @@
           - Resend OTP.
           - Allow password change after successful OTP verification.
 
-## Feature Update MAY 30 2026
+## Update MAY 30 2026
 - Features: Resend OTP `for Bearer Token Only`.
      - Changes Added: Cooldown time for 5 mins.
 
@@ -50,7 +50,7 @@
           - Reset Password
           - Resend OTP
 
-## Feature Update JUNE 7 to JUNE 10 2026
+## Update JUNE 7 to JUNE 10 2026
 - Features: Login, Verify Otp, Resend Otp
      - Changes Added: 
           - `Anti Brute Force` 5 attempts.
@@ -93,7 +93,7 @@
           - Permanently delete services using hard delete
           - Remove service records from the database
 
-## Feature: Update June 25 2026
+## Update June 25 2026
 - Features: Service Management
      - Changes Added: 
           - Refactor Service code change local store image into cloud
@@ -102,7 +102,7 @@
      - Bug Fixed:
           - Where image is not deleted in cloudinary website when calling Delete/Update method.
 
-## Feature Update and Modify CODE JUNE 27 2026
+## Update and Modify CODE JUNE 27 2026
 - Features: Service Management
      - Changes Added:
           - Add a points for every services created
@@ -135,8 +135,37 @@
 - *Delete Coupon*
      - Permanently Delete the coupon from the database.
 
-##
+## UPDATE  JULY 4 2026
+- CODE: Refactor User Create Repository
+     - *Description*
+          - Whenever A User Created it will automatically create a Wallet for Points.
+          - Whenever the flow is Broken it will rollback until the flow is not broken.
 
+- Feature : Get Current Patient Points
+     - *Description*
+          - Allow an authenticated patient to view their own current reward points.
+          - This endpoint is read-only. It does not add or deduct points.
+
+## Feature :  Appointment Booking & Management System
+
+- *Create Appointment* 
+- **DATE CREATED**: JULY 5 2026
+     - Users can book an appointment for a specific service and time slot.
+     - Conflict Prevention before confirming a booking, the system checks existing appointments preventing double booking.
+
+- *Admin Oversight*
+- **DATE CREATED**: JULY 6 to 10 2026
+     - Approve pending appointments, confirming them for the customer.
+     - Reject appointments that can't be accommodated, freeing up the slot.
+- *User Self-Service*
+- **DATE CREATED**: JULY 6 to 10 2026
+     - View a list of their own appointments.
+     - View detailed information for a specific appointment 
+     - Cancel an appointment themselves
+          - Ownership validation 
+               - users can only cancel appointments that belong to them.
+          - 24-hour cancellation policy.
+               - cancellations are only allowed if the appointment is more than 24 hours away, protecting against last-minute no-shows/cancellations.
 
 
 
@@ -157,7 +186,7 @@
 - *Description*
      - Starts the forgot password process. Sends `OTP` to user's `email`.
 
-- **POST /verify/otp**
+3. **POST /verify/otp**
 - *Description*
      - Verifies OTP during password recovery.
 - Request Body Example
@@ -165,7 +194,7 @@
      -   `"otp":"325123"`
      - }
 
-3. **POST /reset/password**
+4. **POST /reset/password**
 - *Description*
      - Changes password after `OTP` verification.
 - Request Body Example
@@ -174,7 +203,7 @@
      -    `"confirmPassword":"new123"`
      - }
 
-4. **POST /resend/otp**
+5. **POST /resend/otp**
 - *Description*
      - Resends OTP if the previous one expires or the user didn't get the 1st otp.
 

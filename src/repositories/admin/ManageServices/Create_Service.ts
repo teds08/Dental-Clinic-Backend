@@ -18,11 +18,12 @@ image_public_id,
 title,
 description,
 price,
-points
+points,
+duration_minutes
 )
 
 VALUES
-($1,$2,$3,$4,$5,$6)
+($1,$2,$3,$4,$5,$6,$7)
 
 RETURNING *
 `,
@@ -33,7 +34,8 @@ data.image_public_id,
 data.title,
 data.description,
 data.price,
-data.points
+data.points,
+data.duration_minutes
 ]
 
 );

@@ -6,4 +6,5 @@ export interface IService {
   image: string;
   image_public_id?: string;
   points: number;
+  duration_minutes: number;
 }

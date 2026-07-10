@@ -6,3 +6,4 @@ export {RestoreServiceRepository} from "./Restore_Service";
 export {ArchiveListRepository} from "./ArchiveList_Service";
 export {GetAllServiceRepository} from "./All_Service";
 export {DeletePermanentRepository} from "./Delete_Service";
+export {CheckAppointmentOverlapRepository} from "./check.overlap_Service";

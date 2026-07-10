@@ -1,0 +1,1 @@
+export {GetPatientPointsService} from "./get.client.points";

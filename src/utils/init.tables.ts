@@ -87,6 +87,7 @@ export const initTables = async () => {
       price NUMERIC(10,2) NOT NULL,
       image_public_id TEXT,
       points INT NOT NULL DEFAULT 0,
+      duration_minutes INT NOT NULL,
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW(),
       deleted_at TIMESTAMP NULL
@@ -110,10 +111,77 @@ export const initTables = async () => {
       `);
 
 
+    // Patient Points Table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS patient_points (
+    id SERIAL PRIMARY KEY,
+
+    user_id INT NOT NULL UNIQUE
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    total_points INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+    );
+      `);
 
 
 
+    // Appointments Table
+    await pool.query(`
+      
+    CREATE TABLE IF NOT EXISTS appointments (
 
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+    service_id INT NOT NULL
+        REFERENCES services(id) ON DELETE RESTRICT,
+    patient_name VARCHAR(150) NOT NULL,
+    age INT NOT NULL,
+    contact_number VARCHAR(20) NOT NULL,
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    status VARCHAR(20) NOT NULL
+    CHECK (status IN ('PENDING','APPROVED','REJECTED','COMPLETED','CANCELLED'))
+    DEFAULT 'PENDING',
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    deleted_at TIMESTAMP
+
+);
+
+
+    `);
+
+
+    // Point Transactions Table
+    await pool.query(`
+      
+      CREATE TABLE IF NOT EXISTS point_transactions (
+
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+    appointment_id INT
+        REFERENCES appointments(id)
+        ON DELETE SET NULL,
+    coupon_id INT
+        REFERENCES coupons(id)
+        ON DELETE SET NULL,
+    transaction_type VARCHAR(20) NOT NULL,
+    points INT NOT NULL,
+    balance_before INT NOT NULL,
+    balance_after INT NOT NULL,
+    remarks TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+
+);
+      
+      `);
 
 
 
