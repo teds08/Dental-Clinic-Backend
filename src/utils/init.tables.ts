@@ -185,6 +185,24 @@ export const initTables = async () => {
 
 
 
+    // Notifications Table
+    await pool.query(`
+      
+      CREATE TABLE IF NOT EXISTS notifications (
+
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+    title VARCHAR(150) NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW()
+
+);
+      
+      `);
+
 
     console.log("Tables  initialized");
   }

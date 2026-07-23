@@ -1,11 +1,16 @@
 import { pool } from "../../config/db";
+import { Database } from "../../types/database.type";
+
 import { IAppointment } from "../../interfaces/appointment.interface";
 
 export class CreateAppointmentRepository {
 
+    constructor(private db: Database = pool) {}
+
+
   async create(data: IAppointment) {
 
-    const result = await pool.query(
+    const result = await this.db.query(
       `
       INSERT INTO appointments
       (

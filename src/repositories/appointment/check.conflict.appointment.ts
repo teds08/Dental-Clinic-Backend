@@ -1,6 +1,9 @@
-import { pool } from "../../../config/db";
+import { pool } from "./../../config/db";
+import { Database } from "../../types/database.type";
+
 
 export class CheckAppointmentOverlapRepository {
+    constructor(private db: Database = pool) {}
 
   async hasConflict(
     appointmentDate: string,
@@ -8,7 +11,7 @@ export class CheckAppointmentOverlapRepository {
     endTime: string
   ) {
 
-    const result = await pool.query(
+    const result = await this.db.query(
       `
       SELECT 1
       FROM appointments a

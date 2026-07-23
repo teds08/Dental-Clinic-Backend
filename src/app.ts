@@ -6,7 +6,7 @@ import publicRoutes from "./routes/public.routes"
 import serviceRoutes from "./routes/service.routes";
 import pointsRoutes from "./routes/points.routes";
 import appointmentRoutes from "./routes/appointment.routes";
-
+import notifRoutes from "./routes/notification.routes";
 
 const app = express();
 
@@ -17,7 +17,8 @@ app.use("/api", userRoutes);
 app.use("/api", adminRoutes);
 app.use("/api", publicRoutes);
 app.use("/api", serviceRoutes);
-app.use("/points", pointsRoutes);
+app.use("/api", pointsRoutes);
 app.use("/api", appointmentRoutes);
+app.use("/api",notifRoutes);
 
 export default app;

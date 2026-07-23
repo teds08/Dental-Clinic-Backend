@@ -1,0 +1,1 @@
+export {FindAdminsRepository} from "./find.admins";

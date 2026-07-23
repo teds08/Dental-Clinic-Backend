@@ -1,29 +1,31 @@
-import {IAppointment} from "../../interfaces/appointment.interface";
-import {calculateEndTime} from "../../utils/appointment.time";
-import {CheckAppointmentOverlapRepository} from "../../repositories/admin/index";
-import {FindServiceRepository} from "../../repositories/admin/index";
-import {CreateAppointmentRepository} from "../../repositories/appointment/index";
+import { pool } from "../../config/db";
+import { IAppointment } from "../../interfaces/appointment.interface";
+import { calculateEndTime } from "../../utils/appointment.time";
 
+import { CheckAppointmentOverlapRepository, CreateAppointmentRepository} from "../../repositories/appointment";
+import { FindAdminsRepository, FindServiceRepository} from "../../repositories/admin";
+import {CreateNotificationRepository} from "../../repositories/notification";
 
 export class CreateAppointmentService {
 
-  private appointmentRepo = new CreateAppointmentRepository();
   private overlapRepo = new CheckAppointmentOverlapRepository();
   private serviceRepo = new FindServiceRepository();
+  private adminRepo = new FindAdminsRepository();
 
   async createAppointment(
     data: Omit<IAppointment, "user_id">,
     userId: number
   ) {
 
-    // 1. Verify the service exists
-    const service = await this.serviceRepo.findById(data.service_id);
+    // 1. Verify service exists
+    const service =
+      await this.serviceRepo.findById(data.service_id);
 
     if (!service) {
       throw new Error("Selected service does not exist.");
     }
 
-    // 2. Calculate the appointment end time
+    // 2. Calculate appointment end time
     const endTime =
       calculateEndTime(
         data.appointment_time,
@@ -31,7 +33,8 @@ export class CreateAppointmentService {
       );
 
     // 3. Check for overlapping appointments
-    const hasConflict = await this.overlapRepo.hasConflict(
+    const hasConflict =
+      await this.overlapRepo.hasConflict(
         data.appointment_date,
         data.appointment_time,
         endTime
@@ -43,14 +46,74 @@ export class CreateAppointmentService {
       );
     }
 
-    // 4. Save the appointment
-    const appointment =
-      await this.appointmentRepo.create({
-        ...data,
-        user_id: userId
-      });
+    // 4. Start transaction
+    const client = await pool.connect();
 
-    return appointment;
+    try {
+      await client.query("BEGIN");
+
+      const appointmentRepo = new CreateAppointmentRepository(client);
+      const notificationRepo = new CreateNotificationRepository(client);
+
+      // 5. Create appointment
+      const appointment = await appointmentRepo.create({
+          ...data,
+          user_id: userId
+        });
+
+      // 6. Find all admins
+      const admins = await this.adminRepo.findAll();
+      const formattedDate =
+        new Date(data.appointment_date).toLocaleDateString(
+          "en-PH",
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          }
+        );
+
+      const formattedTime =
+        new Date(
+          `1970-01-01T${data.appointment_time}`
+        ).toLocaleTimeString(
+          "en-PH",
+          {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true
+          }
+        );
+
+      // 7. Notify every admin
+      for (const admin of admins) {
+
+        await notificationRepo.create(
+          admin.id,
+        "New Appointment",
+        `A new appointment has been booked.
+
+        Patient: ${data.patient_name}
+        Service: ${service.title}
+        Date: ${formattedDate}
+        Time: ${formattedTime}
+        Status: Pending`
+        );
+
+      }
+
+      // 8. Commit transaction
+      await client.query("COMMIT");
+      return appointment;
+
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+      
+    } finally {
+      client.release();
+
+    }
 
   }
 

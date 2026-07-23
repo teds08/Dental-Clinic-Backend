@@ -94,7 +94,6 @@ export class AppointmentController {
   try {
 
     const id = Number(req.params.id);
-
     const result = await rejectAppointmentService.reject(id);
 
     return res.status(200).json({
@@ -103,7 +102,6 @@ export class AppointmentController {
     });
 
   } catch (error: any) {
-
     return res.status(400).json({
       message: error.message
     });

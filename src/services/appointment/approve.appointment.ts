@@ -1,14 +1,14 @@
-import {ApproveAppointmentRepository, FindAppointmentRepository} from "../../repositories/appointment/index";
+import { pool } from "../../config/db";
+import {FindAppointmentRepository , UpdateAppointmentStatusRepository} from "../../repositories/appointment/index";
+import {CreateNotificationRepository} from "../../repositories/notification/index";
 
 export class ApproveAppointmentService {
 
-  private repo = new ApproveAppointmentRepository();
   private findRepo = new FindAppointmentRepository();
 
-  async approve(id: number) {
+  async approve( appointmentId: number ) {
 
-    const appointment = await this.findRepo.findById(id);
-
+    const appointment = await this.findRepo.findById( appointmentId );
     if (!appointment) {
       throw new Error("Appointment not found.");
     }
@@ -19,7 +19,67 @@ export class ApproveAppointmentService {
       );
     }
 
-    return await this.repo.approve(id);
+    const client = await pool.connect();
+
+    try {
+      await client.query("BEGIN");
+      const statusRepo = new UpdateAppointmentStatusRepository(client);
+      const notificationRepo = new CreateNotificationRepository(client);
+      const updatedAppointment = await statusRepo.updateStatus( appointmentId, "PENDING", "APPROVED" );
+  
+      if (!updatedAppointment) {
+    throw new Error(
+      "Appointment has already been updated."
+    );
+  }
+
+      const formattedDate =
+        new Date(
+          appointment.appointment_date
+        ).toLocaleDateString(
+          "en-PH",
+          {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          }
+        );
+
+      const formattedTime =
+        new Date(
+          `1970-01-01T${appointment.appointment_time}`
+        ).toLocaleTimeString(
+          "en-PH",
+          {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true
+          }
+        );
+
+      await notificationRepo.create(
+        
+        appointment.user_id,
+        "Appointment Approved",
+      `Your appointment has been approved.
+      
+Service:
+${appointment.title}
+Date:
+${formattedDate}
+Time:
+${formattedTime}
+Please arrive at least 15 minutes before your appointment.`
+);
+
+      await client.query("COMMIT");
+      return updatedAppointment;
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
 
   }
 
