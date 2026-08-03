@@ -310,7 +310,8 @@
      -    `"price": 3500,`
      -    `"image": "url in Cloudinary",`
      -    `"image_public_id":"public id in Cloudinary",`
-     -    `"points": 5`
+     -    `"points": 5,`
+     -    `"duration_minutes":90`
      - }
 - `Step 1 -> upload image in Cloudinary -> Get the url and public id -> paste it in Request Body.`
 

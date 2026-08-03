@@ -18,7 +18,7 @@ export const createAppointmentValidator = z.object({
   appointment_time: z.string()
     .regex(
       /^([01]\d|2[0-3]):([0-5]\d)$/,
-      "Time must be in HH:mm format."
-    )
+      "Time must be in HH:mm format."),
+  patient_coupon_id: z.coerce.number().int().positive().nullable().optional()
 
 });

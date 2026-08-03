@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {createAppointmentValidator} from "../validators/appointment.validator";
-import {CreateAppointmentService, FindAllAppointmentsService, ApproveAppointmentService, RejectAppointmentService, FindMyAppointmentsService, FindAppointmentDetailsService, CancelAppointmentService} from "../services/appointment/index";
+import {CreateAppointmentService, FindAllAppointmentsService, ApproveAppointmentService, RejectAppointmentService, FindMyAppointmentsService, FindAppointmentDetailsService, CancelAppointmentService, CompleteAppointmentService} from "../services/appointment/index";
 import {AuthRequest} from "../middlewares/auth.middleware";
 
 
@@ -12,7 +12,7 @@ const rejectAppointmentService = new RejectAppointmentService();
 const findMyAppointmentsService = new FindMyAppointmentsService();
 const findAppointmentDetailsService = new FindAppointmentDetailsService();
 const cancelAppointmentService = new CancelAppointmentService();
-
+const completeAppointmentService = new CompleteAppointmentService();
 
 export class AppointmentController {
 
@@ -183,6 +183,42 @@ export class AppointmentController {
 
 }
 
+  async completeAppointment(req: Request,res: Response) {
+
+  try {
+
+    const appointmentId = Number(req.params.id);
+
+    if (Number.isNaN(appointmentId)) {
+      return res.status(400).json({
+        message: "Invalid appointment id."
+      });
+    }
+
+    const appointment = await completeAppointmentService.complete(appointmentId);
+
+    return res.status(200).json({
+
+      message:
+        "Appointment completed successfully.",
+
+      data:
+        appointment
+
+    });
+
+  } catch (error: any) {
+
+    return res.status(400).json({
+
+      message:
+        error.message
+
+    });
+
+  }
+
+}
 
 }
 

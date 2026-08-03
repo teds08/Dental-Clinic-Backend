@@ -5,3 +5,4 @@ export {RejectAppointmentService} from "./reject.appointment";
 export {FindMyAppointmentsService} from "./my.appointment";
 export {FindAppointmentDetailsService} from "./details.appointment";
 export {CancelAppointmentService} from "./cancel.appointment";
+export {CompleteAppointmentService} from "./complete.appointment";

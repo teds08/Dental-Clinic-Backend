@@ -99,16 +99,50 @@ export const initTables = async () => {
     await pool.query(`
       
     CREATE TABLE IF NOT EXISTS coupons (
+
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    type VARCHAR(20) NOT NULL,
-    discount_percent INT NOT NULL,
-    required_points INT DEFAULT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
+    name VARCHAR(150) NOT NULL,
+    type VARCHAR(20) NOT NULL CHECK (type IN ('EVENT','NORMAL')),
+    discount_percent NUMERIC(5,2) NOT NULL
+    CHECK (discount_percent > 0 AND discount_percent <= 100),
+    required_points INT,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    start_date DATE,
+    end_date DATE,
     created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-      );
+    updated_at TIMESTAMP DEFAULT NOW(),
+    deleted_at TIMESTAMP
+
+);
       `);
+
+
+    // Patient Coupon
+    await pool.query(
+
+`
+CREATE TABLE IF NOT EXISTS patient_coupons (
+
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    patient_coupon_id INT NOT NULL REFERENCES coupons(id) ON DELETE CASCADE,
+    status VARCHAR(20) NOT NULL
+    CHECK (status IN ('UNUSED','USED','EXPIRED'))
+    DEFAULT 'UNUSED',
+    redeemed_at TIMESTAMP NOT NULL
+    DEFAULT NOW(),
+    used_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL
+    DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL
+    DEFAULT NOW(),
+    deleted_at TIMESTAMP
+
+);
+`
+
+);
+
 
 
     // Patient Points Table
@@ -134,11 +168,8 @@ export const initTables = async () => {
     CREATE TABLE IF NOT EXISTS appointments (
 
     id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL
-        REFERENCES users(id)
-        ON DELETE CASCADE,
-    service_id INT NOT NULL
-        REFERENCES services(id) ON DELETE RESTRICT,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    service_id INT NOT NULL REFERENCES services(id) ON DELETE RESTRICT,
     patient_name VARCHAR(150) NOT NULL,
     age INT NOT NULL,
     contact_number VARCHAR(20) NOT NULL,
@@ -147,12 +178,16 @@ export const initTables = async () => {
     status VARCHAR(20) NOT NULL
     CHECK (status IN ('PENDING','APPROVED','REJECTED','COMPLETED','CANCELLED'))
     DEFAULT 'PENDING',
+    patient_coupon_id INT REFERENCES patient_coupons(id) ON DELETE SET NULL,
+    original_amount DECIMAL(10,2),
+    discount_amount DECIMAL(10,2) DEFAULT 0,
+    final_amount DECIMAL(10,2),
+    points_earned INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
     deleted_at TIMESTAMP
 
 );
-
 
     `);
 
@@ -169,9 +204,9 @@ export const initTables = async () => {
     appointment_id INT
         REFERENCES appointments(id)
         ON DELETE SET NULL,
-    coupon_id INT
-        REFERENCES coupons(id)
-        ON DELETE SET NULL,
+    patient_coupon_id INT
+      REFERENCES coupons(id)
+      ON DELETE SET NULL,
     transaction_type VARCHAR(20) NOT NULL,
     points INT NOT NULL,
     balance_before INT NOT NULL,

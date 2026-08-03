@@ -3,3 +3,7 @@ export {FindAllCouponRepository} from "./find.all.coupon";
 export {UpdateCouponRepository} from "./update.coupon";
 export {CouponStatusRepository} from "./status.coupon";
 export {DeleteCouponRepository} from "./delete.coupon";
+export {FindActiveCouponRepository} from "./find.active.coupon";
+export {CreatePatientCouponRepository} from "./create.patient.coupon";
+export {UpdatePatientCouponRepository} from "./update.patient.coupon";
+export {FindPatientCouponRepository} from "./find.patient.coupon";

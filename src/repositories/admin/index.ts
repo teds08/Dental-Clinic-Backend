@@ -5,10 +5,10 @@ export {FindAllRepository , HardDeleteRepository, SoftDeleteRepository, RestoreU
 export {CreateServiceRepository, UpdateServiceRepository, FindServiceRepository, SoftDeleteServiceRepository, RestoreServiceRepository, ArchiveListRepository, GetAllServiceRepository, DeletePermanentRepository} from "./ManageServices/index";
 
 // Manage Coupon
-export {CreateCouponRepository, FindAllCouponRepository, UpdateCouponRepository, CouponStatusRepository, DeleteCouponRepository} from "./manageCoupon/index"
+export {FindPatientCouponRepository ,UpdatePatientCouponRepository ,CreatePatientCouponRepository ,FindActiveCouponRepository, CreateCouponRepository, FindAllCouponRepository, UpdateCouponRepository, CouponStatusRepository, DeleteCouponRepository} from "./manageCoupon/index"
 
 // Patient Points
-export {CreatePatientPointsRepository, GetPatientPointsRepository} from "./points/index";
+export {CreatePatientPointsRepository, GetPatientPointsRepository, CreatePointTransactionRepository, UpdatePatientPointsRepository, FindPatientPointsRepository} from "./points/index";
 
 // Admin Repo
 export {FindAdminsRepository} from "./adminRepo/index";
