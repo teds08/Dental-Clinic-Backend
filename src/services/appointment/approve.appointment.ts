@@ -1,6 +1,7 @@
 import { pool } from "../../config/db";
 import {FindAppointmentRepository, UpdateAppointmentStatusRepository} from "../../repositories/appointment/index";
 import {CreateNotificationRepository} from "../../repositories/notification/index";
+import {UpdatePatientCouponRepository} from "../../repositories/manage-coupon/index";
 
 
 export class ApproveAppointmentService {
@@ -21,6 +22,7 @@ export class ApproveAppointmentService {
             const findRepo = new FindAppointmentRepository(client);
             const statusRepo = new UpdateAppointmentStatusRepository(client);
             const notificationRepo =  new CreateNotificationRepository(client);
+            const couponRepo = new UpdatePatientCouponRepository(client);
 
 
             // --------------------------------------------------
@@ -106,7 +108,18 @@ export class ApproveAppointmentService {
 
 
             // --------------------------------------------------
-            // 6. Format appointment date
+            // 6. Mark coupon as USED (if appointment has a coupon)
+            // --------------------------------------------------
+
+            if (appointment.patient_coupon_id !== null && appointment.patient_coupon_id !== undefined) {
+
+                await couponRepo.markAsUsed(appointment.patient_coupon_id);
+
+            }
+
+
+            // --------------------------------------------------
+            // 7. Format appointment date
             // --------------------------------------------------
 
             const formattedDate =
@@ -123,7 +136,7 @@ export class ApproveAppointmentService {
 
 
             // --------------------------------------------------
-            // 7. Format appointment time
+            // 8. Format appointment time
             // --------------------------------------------------
 
             const formattedTime =
@@ -140,7 +153,7 @@ export class ApproveAppointmentService {
 
 
             // --------------------------------------------------
-            // 8. Notify the patient
+            // 9. Notify the patient
             // --------------------------------------------------
 
             await notificationRepo.create(
@@ -164,14 +177,14 @@ Please arrive at least 15 minutes before your appointment.`
 
 
             // --------------------------------------------------
-            // 9. Commit the transaction
+            // 10. Commit the transaction
             // --------------------------------------------------
 
             await client.query("COMMIT");
 
 
             // --------------------------------------------------
-            // 10. Return the approved appointment
+            // 11. Return the approved appointment
             // --------------------------------------------------
 
             return updatedAppointment;

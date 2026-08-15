@@ -159,21 +159,20 @@ export class RejectAppointmentService {
                 const notificationMessage =
             `Unfortunately, your appointment could not be approved.
 
-        Service:
-        ${appointment.title}
-        Date:
-        ${formattedDate}
-        Time:
-        ${formattedTime}
+Service:
+${appointment.title}
+Date:
+${formattedDate}
+Time:
+${formattedTime}
 
-        ${couponConflictDetected
-                ? `Coupon Conflict Detected.
-        There was a problem with the coupon associated with this appointment.`
-                : couponWasUsed
-                    ? `Your coupon has been returned to your coupon inventory.`
-                    : ``
-        }
-        Please contact the clinic or book another available schedule.`;
+${couponConflictDetected
+ ? `Coupon Conflict Detected.
+There was a problem with the coupon associated with this appointment.`
+: couponWasUsed
+ ? `Your coupon has been returned to your coupon inventory.`
+: ``}
+Please contact the clinic or book another available schedule.`;
 
 
             // --------------------------------------------------
