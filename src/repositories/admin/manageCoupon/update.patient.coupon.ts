@@ -28,4 +28,31 @@ constructor(private db: Database = pool) {}
 
     }
 
+     async markAsUnused(patientCouponId: number) {
+
+        const result = await this.db.query(
+            `
+            UPDATE patient_coupons
+
+            SET
+                status = 'UNUSED',
+                used_at = NULL,
+                updated_at = NOW()
+
+            WHERE
+                id = $1
+                AND status = 'USED'
+                AND deleted_at IS NULL
+
+            RETURNING *
+            `,
+            [
+                patientCouponId
+            ]
+        );
+
+        return result.rows[0];
+
+    }
+
 }

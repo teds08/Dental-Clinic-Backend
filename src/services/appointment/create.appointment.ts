@@ -3,7 +3,7 @@ import { ICreateAppointment } from "../../interfaces/appointment.interface";
 import { calculateEndTime } from "../../utils/appointment.time";
 
 import {CheckAppointmentOverlapRepository, CreateAppointmentRepository} from "../../repositories/appointment";
-import {FindAdminsRepository, FindServiceRepository, FindActiveCouponRepository, FindPatientCouponRepository, UpdatePatientCouponRepository} from "../../repositories/admin";
+import {FindAdminsRepository, FindServiceRepository, FindPatientCouponRepository, UpdatePatientCouponRepository} from "../../repositories/admin";
 import { CreateNotificationRepository } from "../../repositories/notification";
 
 export class CreateAppointmentService {
@@ -11,7 +11,7 @@ export class CreateAppointmentService {
   private overlapRepo = new CheckAppointmentOverlapRepository();
   private serviceRepo = new FindServiceRepository();
   private adminRepo = new FindAdminsRepository();
-  private couponRepository = new FindActiveCouponRepository();
+
 
   async createAppointment(data: ICreateAppointment, userId: number) {
 

@@ -44,7 +44,7 @@ export class AppointmentController {
 
     }
 
-  }
+}
 
   async getAllAppointments(req: Request, res: Response) {
 

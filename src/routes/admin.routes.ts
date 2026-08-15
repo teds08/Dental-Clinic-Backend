@@ -10,7 +10,7 @@ const couponController = new CouponController();
 
 
 
-//admin only
+//manage users
 router.get("/active/users",authenticate,adminOnly,(req, res) => adminController.getAll(req, res));
 router.patch("/restore/user/:id",authenticate,adminOnly,(req, res) => adminController.restore(req, res));
 router.post("/admin/create",authenticate,adminOnly,(req, res) => adminController.adminCreate(req, res));
