@@ -1,4 +1,4 @@
-import {FindArchiveUsersRepository} from "../../repositories/admin/index";
+import {FindArchiveUsersRepository} from "../../repositories/manage-users/index";
 
 
 export class FindArchiveUsersService {

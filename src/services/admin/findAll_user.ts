@@ -1,4 +1,4 @@
-import { FindAllRepository } from "../../repositories/admin/index";
+import { FindAllRepository } from "../../repositories/manage-users/index";
 
 export class FindAllUserAdminService {
   private findAllRepository = new FindAllRepository();

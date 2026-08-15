@@ -1,4 +1,4 @@
-import { CreateCouponRepository } from "../../repositories/admin/index";
+import { CreateCouponRepository } from "../../repositories/manage-coupon/index";
 
 
 export class CreateCouponService {

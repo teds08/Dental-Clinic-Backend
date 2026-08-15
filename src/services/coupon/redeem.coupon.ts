@@ -1,6 +1,7 @@
 import {pool} from "../../config/db";
 
-import {FindPatientPointsRepository, UpdatePatientPointsRepository, CreatePatientCouponRepository, FindActiveCouponRepository, CreatePointTransactionRepository } from "../../repositories/admin"
+import {CreatePatientCouponRepository, FindActiveCouponRepository} from "../../repositories/manage-coupon/index";
+import { FindPatientPointsRepository, UpdatePatientPointsRepository, CreatePointTransactionRepository} from "../../repositories/manage-patient-points/index";
 import {CreateNotificationRepository} from "../../repositories/notification";
 
 

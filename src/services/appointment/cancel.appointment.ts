@@ -1,6 +1,7 @@
 import { pool } from "../../config/db";
 import {UpdateAppointmentStatusRepository, FindAppointmentRepository} from "../../repositories/appointment/index";
-import {FindAdminsRepository, UpdatePatientCouponRepository} from "../../repositories/admin/index";
+import {FindAdminsRepository} from "../../repositories/admin/index";
+import {UpdatePatientCouponRepository} from "../../repositories/manage-coupon/index";
 import {CreateNotificationRepository} from "../../repositories/notification/index";
 
 export class CancelAppointmentService {

@@ -1,4 +1,4 @@
-import { GetPatientPointsRepository } from "../../repositories/admin/index";
+import { GetPatientPointsRepository } from "../../repositories/manage-patient-points/index";
 
 export class GetPatientPointsService {
 

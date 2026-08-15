@@ -1,2 +1,9 @@
-// User Repository
-export {AuthenticatedPasswordChangeRepository, CreateUserRepository, FailedAttemptsUserRepository, FindByIdRepository, FindEmailUserRepository, GetProfileRepository, LockUserRepository, ResetAttemptsUserRepository, UpdateUserRepository} from "../user/UserServices/index";
+export {AuthenticatedPasswordChangeRepository} from "./Secured_Change_Password";
+export {CreateUserRepository} from "./Create_User";
+export {FailedAttemptsUserRepository} from "./Login_Attempts";
+export {FindByIdRepository} from "./Find_User_ID";
+export {FindEmailUserRepository} from "./Find_User_Email";
+export {GetProfileRepository} from "./Get_User_Profile";
+export {LockUserRepository} from "./Lock_User";
+export {ResetAttemptsUserRepository} from "./Reset_Attempts";
+export {UpdateUserRepository} from "./Update_Profile";

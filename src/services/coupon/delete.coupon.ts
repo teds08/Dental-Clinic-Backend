@@ -1,4 +1,4 @@
-import { DeleteCouponRepository } from "../../repositories/admin/index";
+import { DeleteCouponRepository } from "../../repositories/manage-coupon/index";
 
 
 export class DeleteCouponService {

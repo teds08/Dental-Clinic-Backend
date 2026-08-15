@@ -3,8 +3,10 @@ import { ICreateAppointment } from "../../interfaces/appointment.interface";
 import { calculateEndTime } from "../../utils/appointment.time";
 
 import {CheckAppointmentOverlapRepository, CreateAppointmentRepository} from "../../repositories/appointment";
-import {FindAdminsRepository, FindServiceRepository, FindPatientCouponRepository, UpdatePatientCouponRepository} from "../../repositories/admin";
+import {FindPatientCouponRepository, UpdatePatientCouponRepository} from "../../repositories/manage-coupon/index";
 import { CreateNotificationRepository } from "../../repositories/notification";
+import {FindAdminsRepository} from "../../repositories/admin/index"
+import {FindServiceRepository} from "../../repositories/manage-services/index";
 
 export class CreateAppointmentService {
 

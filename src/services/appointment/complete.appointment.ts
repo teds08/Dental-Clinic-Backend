@@ -1,8 +1,7 @@
 import { pool } from "../../config/db";
 import {FindAppointmentRepository, UpdateAppointmentStatusRepository} from "../../repositories/appointment/index";
-import {UpdatePatientPointsRepository, CreatePointTransactionRepository} from "../../repositories/admin/index";
 import {CreateNotificationRepository} from "../../repositories/notification/index";
-import {FindPatientPointsRepository} from "../../repositories/admin/index";
+import {FindPatientPointsRepository, UpdatePatientPointsRepository, CreatePointTransactionRepository} from "../../repositories/manage-patient-points/index";
 export class CompleteAppointmentService {
 
   private appointmentRepository = new FindAppointmentRepository();

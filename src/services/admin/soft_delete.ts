@@ -1,4 +1,4 @@
-import { SoftDeleteRepository } from "../../repositories/admin/index";
+import { SoftDeleteRepository } from "../../repositories/manage-users/index";
 
 export class SoftDeleteUserAdminService {
   private softDeleteRepository = new SoftDeleteRepository();

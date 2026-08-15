@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateService, UpdateService, SoftDeleteService, RestoreService, ArchiveListService, GetAllServiceService, DeletePermanentService} from "../services/manageservice/index";
+import { CreateService, UpdateService, SoftDeleteService, RestoreService, ArchiveListService, GetAllServiceService, DeletePermanentService} from "../services/manage-services/index";
 import {CreateServiceValidator, UpdateServiceValidator} from "../validators/admin.service.validator";
 
 export class ServiceController {

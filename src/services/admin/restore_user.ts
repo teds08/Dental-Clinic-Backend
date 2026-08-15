@@ -1,4 +1,4 @@
-import { RestoreUserRepository } from "../../repositories/admin/index";
+import { RestoreUserRepository } from "../../repositories/manage-users/index";
 
 export class RestoreUserAdminService {
   private restoreUserRepository = new RestoreUserRepository();
