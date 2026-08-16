@@ -1,10 +1,12 @@
 import { pool } from "../../config/db";
+import { Database } from "../../types/database.type";
 
 export class FindActiveCouponRepository {
+constructor(private db: Database = pool) {}
 
   async findById(couponId: number) {
 
-    const result = await pool.query(
+    const result = await this.db.query(
 
       `
       SELECT * FROM coupons
@@ -28,7 +30,7 @@ export class FindActiveCouponRepository {
 
    async findActiveEventCouponById(couponId: number) {
 
-    const result = await pool.query(
+    const result = await this.db.query(
 
       `
       SELECT * FROM coupons
@@ -52,7 +54,7 @@ export class FindActiveCouponRepository {
   }
 
    async findActiveNormalCouponById(couponId: number) {
-    const result = await pool.query(
+    const result = await this.db.query(
 
       `
       SELECT * FROM coupons

@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
     status VARCHAR(20) NOT NULL
     CHECK (status IN ('PENDING','APPROVED','REJECTED','COMPLETED','CANCELLED'))
     DEFAULT 'PENDING',
+    coupon_id INT REFERENCES coupons(id) ON DELETE SET NULL,
     patient_coupon_id INT REFERENCES patient_coupons(id) ON DELETE SET NULL,
     original_amount DECIMAL(10,2),
     discount_amount DECIMAL(10,2) DEFAULT 0,

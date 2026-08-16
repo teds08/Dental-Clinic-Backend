@@ -1,10 +1,13 @@
 import { pool } from "../../config/db";
 import { ICoupon } from "../../interfaces/coupon.interface";
+import { Database } from "../../types/database.type";
+
 
 export class CreateCouponRepository {
+constructor(private db: Database = pool) {}
 
   async create(data: ICoupon) {
-    const result = await pool.query(
+    const result = await this.db.query(
 
         `
         INSERT INTO coupons

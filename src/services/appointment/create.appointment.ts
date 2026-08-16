@@ -1,168 +1,521 @@
 import { pool } from "../../config/db";
-import { ICreateAppointment } from "../../interfaces/appointment.interface";
-import { calculateEndTime } from "../../utils/appointment.time";
 
-import {CheckAppointmentOverlapRepository, CreateAppointmentRepository} from "../../repositories/appointment";
-import {FindPatientCouponRepository, UpdatePatientCouponRepository} from "../../repositories/manage-coupon/index";
-import { CreateNotificationRepository } from "../../repositories/notification";
-import {FindAdminsRepository} from "../../repositories/admin/index"
-import {FindServiceRepository} from "../../repositories/manage-services/index";
+import {
+  ICreateAppointment
+} from "../../interfaces/appointment.interface";
+
+import {
+  calculateEndTime
+} from "../../utils/appointment.time";
+
+
+import {
+  CheckAppointmentOverlapRepository,
+  CreateAppointmentRepository
+} from "../../repositories/appointment/index";
+
+
+import {
+  FindPatientCouponRepository,
+  UpdatePatientCouponRepository, FindActiveCouponRepository
+} from "../../repositories/manage-coupon/index";
+
+
+import {
+  CreateNotificationRepository
+} from "../../repositories/notification/index";
+
+
+import {
+  FindAdminsRepository
+} from "../../repositories/admin/index";
+
+
+import {
+  FindServiceRepository
+} from "../../repositories/manage-services/index";
+
 
 export class CreateAppointmentService {
 
-  private overlapRepo = new CheckAppointmentOverlapRepository();
-  private serviceRepo = new FindServiceRepository();
-  private adminRepo = new FindAdminsRepository();
+  private overlapRepo =
+    new CheckAppointmentOverlapRepository();
 
 
-  async createAppointment(data: ICreateAppointment, userId: number) {
+  private serviceRepo =
+    new FindServiceRepository();
 
-    /**
-     * Verify the selected service exists.
-     */
-    const service = await this.serviceRepo.findById(data.service_id);
+
+  private adminRepo =
+    new FindAdminsRepository();
+
+
+  private couponRepository =
+    new FindActiveCouponRepository();
+
+
+  async createAppointment(
+    data: ICreateAppointment,
+    userId: number
+  ) {
+
+    // ==================================================
+    // 1. VERIFY SERVICE
+    // ==================================================
+
+    const service =
+      await this.serviceRepo.findById(
+        data.service_id
+      );
+
 
     if (!service) {
+
       throw new Error(
         "Selected service does not exist."
       );
+
     }
 
-  let originalAmount = Number(service.price);
-  let discountAmount = 0;
-  let finalAmount = originalAmount;
-  let pointsEarned = service.points;
 
-    // Calculate appointment end time.
-    const endTime = calculateEndTime(
+    // ==================================================
+    // 2. DEFAULT APPOINTMENT AMOUNTS
+    // ==================================================
+
+    const originalAmount =
+      Number(
+        service.price
+      );
+
+
+    let discountAmount =
+      0;
+
+
+    let finalAmount =
+      originalAmount;
+
+
+    let pointsEarned =
+      Number(
+        service.points
+      );
+
+
+    // ==================================================
+    // 3. CALCULATE APPOINTMENT END TIME
+    // ==================================================
+
+    const endTime =
+      calculateEndTime(
+
         data.appointment_time,
+
         service.duration_minutes
+
       );
 
-    // Check schedule conflict.
-    const hasConflict = await this.overlapRepo.hasConflict(
+
+    // ==================================================
+    // 4. CHECK APPOINTMENT SCHEDULE CONFLICT
+    // ==================================================
+
+    const hasConflict =
+      await this.overlapRepo.hasConflict(
+
         data.appointment_date,
+
         data.appointment_time,
+
         endTime
+
       );
+
 
     if (hasConflict) {
+
       throw new Error(
         "The selected schedule is already occupied."
       );
+
     }
 
-    // Start PostgreSQL transaction.
-    const client = await pool.connect();
+
+    // ==================================================
+    // 5. START TRANSACTION
+    // ==================================================
+
+    const client =
+      await pool.connect();
+
 
     try {
 
-      await client.query("BEGIN");
-      const appointmentRepo = new CreateAppointmentRepository(client);
-      const notificationRepo = new CreateNotificationRepository(client);
-      const patientCouponRepository = new FindPatientCouponRepository(client);
-      const updatePatientCouponRepository = new UpdatePatientCouponRepository(client);
+      await client.query(
+        "BEGIN"
+      );
 
-    if (data.patient_coupon_id) {
 
-    const patientCoupon = await patientCouponRepository.findById(
+      // ==================================================
+      // 6. CREATE TRANSACTION REPOSITORIES
+      // ==================================================
+
+      const appointmentRepo =
+        new CreateAppointmentRepository(
+          client
+        );
+
+
+      const notificationRepo =
+        new CreateNotificationRepository(
+          client
+        );
+
+
+      const patientCouponRepository =
+        new FindPatientCouponRepository(
+          client
+        );
+
+
+      const updatePatientCouponRepository =
+        new UpdatePatientCouponRepository(
+          client
+        );
+
+
+      // ==================================================
+      // 7. NORMAL COUPON
+      // ==================================================
+
+      if (
+        data.patient_coupon_id !== null &&
+        data.patient_coupon_id !== undefined
+      ) {
+
+        // ------------------------------------------------
+        // Find patient's coupon inventory record
+        // ------------------------------------------------
+
+        const patientCoupon =
+          await patientCouponRepository.findById(
 
             data.patient_coupon_id
 
-        );
+          );
 
-    if (!patientCoupon) {
 
-        throw new Error(
+        if (!patientCoupon) {
+
+          throw new Error(
             "Patient coupon does not exist."
-        );
+          );
 
-    }
+        }
 
-    if (patientCoupon.user_id !== userId) {
 
-        throw new Error(
+        // ------------------------------------------------
+        // Verify ownership
+        // ------------------------------------------------
+
+        if (
+          patientCoupon.user_id !== userId
+        ) {
+
+          throw new Error(
             "This coupon does not belong to you."
-        );
+          );
 
-    }
+        }
 
-    if (patientCoupon.status !== "UNUSED") {
 
-        throw new Error(
+        // ------------------------------------------------
+        // Verify coupon is unused
+        // ------------------------------------------------
+
+        if (
+          patientCoupon.status !== "UNUSED"
+        ) {
+
+          throw new Error(
             "This coupon has already been used."
-        );
+          );
 
-    }
-
-    const discount = Number(patientCoupon.discount_percent);
-
-    discountAmount = Number((originalAmount * (discount / 100)).toFixed(2));
-    finalAmount = Number((originalAmount - discountAmount).toFixed(2));
-
-    /**
-     * Reward points are not earned
-     * when a coupon is used.
-     */
-
-    pointsEarned = 0;
-
-}
+        }
 
 
+        // ------------------------------------------------
+        // Verify the actual coupon is NORMAL
+        // ------------------------------------------------
+
+        if (
+          patientCoupon.type !== "NORMAL"
+        ) {
+
+          throw new Error(
+            "This patient coupon is not a normal coupon."
+          );
+
+        }
 
 
-      // Create appointment.
-      const appointment = await appointmentRepo.create({
+        // ------------------------------------------------
+        // Calculate discount
+        // ------------------------------------------------
+
+        const discountPercent =
+          Number(
+            patientCoupon.discount_percent
+          );
+
+
+        discountAmount =
+          Number(
+
+            (
+              originalAmount *
+              (
+                discountPercent /
+                100
+              )
+
+            ).toFixed(2)
+
+          );
+
+
+        finalAmount =
+          Number(
+
+            (
+              originalAmount -
+              discountAmount
+
+            ).toFixed(2)
+
+          );
+
+
+        // ------------------------------------------------
+        // Coupon means no reward points
+        // ------------------------------------------------
+
+        pointsEarned =
+          0;
+
+      }
+
+
+      // ==================================================
+      // 8. EVENT COUPON
+      // ==================================================
+
+      if (
+        data.coupon_id !== null &&
+        data.coupon_id !== undefined
+      ) {
+
+        // ------------------------------------------------
+        // Find active Event Coupon
+        // ------------------------------------------------
+
+        const eventCoupon =
+          await this.couponRepository
+            .findActiveEventCouponById(
+
+              data.coupon_id
+
+            );
+
+
+        if (!eventCoupon) {
+
+          throw new Error(
+            "The selected Event Coupon is not active or has expired."
+          );
+
+        }
+
+
+        // ------------------------------------------------
+        // Calculate Event Coupon discount
+        // ------------------------------------------------
+
+        const discountPercent =
+          Number(
+            eventCoupon.discount_percent
+          );
+
+
+        discountAmount =
+          Number(
+
+            (
+              originalAmount *
+              (
+                discountPercent /
+                100
+              )
+
+            ).toFixed(2)
+
+          );
+
+
+        finalAmount =
+          Number(
+
+            (
+              originalAmount -
+              discountAmount
+
+            ).toFixed(2)
+
+          );
+
+
+        // ------------------------------------------------
+        // Event Coupon means no reward points
+        // ------------------------------------------------
+
+        pointsEarned =
+          0;
+
+      }
+
+
+      // ==================================================
+      // 9. CREATE APPOINTMENT
+      // ==================================================
+
+      const appointment =
+        await appointmentRepo.create({
 
           ...data,
 
-          user_id: userId,
-          patient_coupon_id: data.patient_coupon_id ?? null,
-          original_amount: originalAmount,
-          discount_amount: discountAmount,
-          final_amount: finalAmount,
-          points_earned: pointsEarned
+          user_id:
+            userId,
+
+          patient_coupon_id:
+            data.patient_coupon_id ?? null,
+
+          coupon_id:
+            data.coupon_id ?? null,
+
+          original_amount:
+            originalAmount,
+
+          discount_amount:
+            discountAmount,
+
+          final_amount:
+            finalAmount,
+
+          points_earned:
+            pointsEarned
 
         });
 
-        if (data.patient_coupon_id) {
 
-    await updatePatientCouponRepository.markAsUsed(
-        data.patient_coupon_id
+      // ==================================================
+      // 10. MARK NORMAL COUPON AS USED
+      // ==================================================
 
-    );
+      if (
+        data.patient_coupon_id !== null &&
+        data.patient_coupon_id !== undefined
+      ) {
 
-}
+        const updatedPatientCoupon =
+          await updatePatientCouponRepository.markAsUsed(
 
-      // Retrieve all administrators.
-      const admins = await this.adminRepo.findAll();
+            data.patient_coupon_id
+
+          );
+
+
+        if (!updatedPatientCoupon) {
+
+          throw new Error(
+            "The patient coupon could not be marked as used."
+          );
+
+        }
+
+      }
+
+
+      // ==================================================
+      // 11. RETRIEVE ADMINISTRATORS
+      // ==================================================
+
+      const admins =
+        await this.adminRepo.findAll();
+
+
+      // ==================================================
+      // 12. FORMAT APPOINTMENT DATE
+      // ==================================================
 
       const formattedDate =
         new Date(
+
           data.appointment_date
+
         ).toLocaleDateString(
+
           "en-PH",
+
           {
-            year: "numeric",
-            month: "long",
-            day: "numeric"
+
+            year:
+              "numeric",
+
+            month:
+              "long",
+
+            day:
+              "numeric"
+
           }
+
         );
+
+
+      // ==================================================
+      // 13. FORMAT APPOINTMENT TIME
+      // ==================================================
 
       const formattedTime =
         new Date(
+
           `1970-01-01T${data.appointment_time}`
+
         ).toLocaleTimeString(
+
           "en-PH",
+
           {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true
+
+            hour:
+              "numeric",
+
+            minute:
+              "2-digit",
+
+            hour12:
+              true
+
           }
+
         );
 
-        let message =
+
+      // ==================================================
+      // 14. CREATE ADMIN NOTIFICATION
+      // ==================================================
+
+      let message =
 `A new appointment has been booked.
 
 Patient: ${data.patient_name}
@@ -171,41 +524,101 @@ Date: ${formattedDate}
 Time: ${formattedTime}
 Status: Pending`;
 
-if (data.patient_coupon_id) {
 
-    message +=
+      // --------------------------------------------------
+      // Normal Coupon notification
+      // --------------------------------------------------
+
+      if (
+        data.patient_coupon_id !== null &&
+        data.patient_coupon_id !== undefined
+      ) {
+
+        message +=
 
 `
 
 A reward coupon was applied to this appointment.`;
 
-}
-      // Notify every administrator.
-      for (const admin of admins) {
-
-       await notificationRepo.create(
-
-    admin.id,
-
-    "New Appointment",
-
-    message
-
-);
       }
 
-      // Commit transaction.
-      
-      await client.query("COMMIT");
+
+      // --------------------------------------------------
+      // Event Coupon notification
+      // --------------------------------------------------
+
+      if (
+        data.coupon_id !== null &&
+        data.coupon_id !== undefined
+      ) {
+
+        message +=
+
+`
+
+An Event Coupon was applied to this appointment.`;
+
+      }
+
+
+      // ==================================================
+      // 15. NOTIFY EVERY ADMINISTRATOR
+      // ==================================================
+
+      for (
+        const admin of admins
+      ) {
+
+        await notificationRepo.create(
+
+          admin.id,
+
+          "New Appointment",
+
+          message
+
+        );
+
+      }
+
+
+      // ==================================================
+      // 16. COMMIT TRANSACTION
+      // ==================================================
+
+      await client.query(
+        "COMMIT"
+      );
+
+
+      // ==================================================
+      // 17. RETURN APPOINTMENT
+      // ==================================================
 
       return appointment;
 
-    } catch (error) {
 
-      await client.query("ROLLBACK");
+    } catch (
+      error
+    ) {
+
+      // ==================================================
+      // ROLLBACK
+      // ==================================================
+
+      await client.query(
+        "ROLLBACK"
+      );
+
+
       throw error;
 
+
     } finally {
+
+      // ==================================================
+      // RELEASE DATABASE CONNECTION
+      // ==================================================
 
       client.release();
 

@@ -17,6 +17,7 @@ export interface IAppointment {
     | "CANCELLED";
 
   patient_coupon_id?: number | null;
+  coupon_id?: number | null;
   original_amount: number;
   discount_amount: number;
   final_amount: number;
@@ -33,5 +34,6 @@ export interface ICreateAppointment {
   appointment_date: string;
   appointment_time: string;
   patient_coupon_id?: number | null;
+  coupon_id?: number | null;
 
 }
