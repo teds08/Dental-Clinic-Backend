@@ -1,397 +1,449 @@
-## DentCare: A Cloud-Based Dental Management System for Automating Patient Records and Appointment Scheduling
-
-**THIS CAPSTONE PROJECT FOCUSES ON DEVELOPING AN AUTOMATED `DENTAL CARE MANAGEMENT SYSTEM` DESIGNED TO REPLACE INEFFICIENT MANUAL RECORD-KEEPING. THE PLATFORM DIGITIZES PATIENT HISTORIES AND INTEGRATES AN INTELLIGENT SCHEDULING INTERFACE TO ELIMINATE APPOINTMENT NO-SHOWS. BY PROVIDING A SEAMLESS AND SECURE DIGITAL EXPERIENCE, THE SYSTEM OPTIMIZES CLINIC WORKFLOWS, ENSURES DATA ACCURACY, AND MAXIMIZES OPERATIONAL EFFICIENCY FOR DENTAL PRACTITIONERS AND THEIR PATIENTS.**
-
-## Deployment  
-- To deploy this project `Add/Install/Run`.
-     - `Git Clone repo`.
-     - `Add .env outside of src`.
-     - `Npm i`.
-     - `Npm run dev`.
-
-
-## Documentation
-- **Milestone**
-- 
-- **Features Added**
-- 
-
-## Features Documentation
-- **Feature: Authentication & Password Management**
-- *MAY 29 2026*
-     - 1. User Registration
-          - Register new user account.
-          - Validate user information.
-          - Store encrypted password.
-     - 2. Password Management with NodeMailer for OTP Email Verification System
-          - Change password using Bearer Token authentication.
-          - Send OTP through Nodemailer.
-          - Verify OTP.
-          - Resend OTP.
-          - Allow password change after successful OTP verification.
-
-## Update MAY 30 2026
-- Features: Resend OTP `for Bearer Token Only`.
-     - Changes Added: Cooldown time for 5 mins.
-
-
-## Feature: Authentication , Password Recovery (for none `Bearer Token`) & User Profile Management
-- *JUNE 1 to JUNE 5 2026*
-     - 1. User Login
-          - Authenticate user credentials
-          - Generate Bearer Token for secure access
-          - Validate user authentication
-     - 2. User Profile Management
-          - Get user profile.
-          - Update user profile information except for password `(Token Bearer)`.
-     - 3. Account Recovery (Email OTP using Nodemailer)
-          - Request OTP
-          - Verify OTP
-          - Reset Password
-          - Resend OTP
-
-## Update JUNE 7 to JUNE 10 2026
-- Features: Login, Verify Otp, Resend Otp
-     - Changes Added: 
-          - `Anti Brute Force` 5 attempts.
-          - Locked User / Giving a Cooldown Time for 5 mins
-     - Features : Account Recovery 
-          Changes Added:  
-          - Now in Session Table
-          - id int into uuid
-     - Bug Fixed
-          - Fix Bug where user can create multiple Session.
-          - Delete Session when user Successfully Change Password.
-
-
-## Feature:  Admin User Management
-- *JUNE 13  to JUNE 18 2026*
-     - 1. User Management
-          - Get all registered users
-          - View user information
-          - Create new users or admin accounts
-     - 2. User Archive Management
-          - Archive users using soft delete
-          - View archived users
-          - Restore archived users
-     - 3. User Deletion Management
-          - Permanently delete users using hard delete
-          - Remove user records from the database
-
-
-## Feature: Service Management
-- *JUNE 20 to JUNE 24 2026*
-     - 1.  Service CRUD Management
-          - Create new services
-          - Get all available services
-          - Update service information
-     - 2.  Service Archive Management
-          - Archive services using soft delete
-          - View archived service list
-          - Restore archived services
-     - 3. Service Deletion Management
-          - Permanently delete services using hard delete
-          - Remove service records from the database
-
-## Update June 25 2026
-- Features: Service Management
-     - Changes Added: 
-          - Refactor Service code change local store image into cloud
-          - Delete Package multer
-          - Integrate to the Cloudinary where we store image through cloud
-     - Bug Fixed:
-          - Where image is not deleted in cloudinary website when calling Delete/Update method.
-
-## Update and Modify CODE JUNE 27 2026
-- Features: Service Management
-     - Changes Added:
-          - Add a points for every services created
-
-- Code : auth.middleware
-     - Changes Added:
-          - add AuthRequest export in auth.middleware in line 4
-          - remove res.local.user.id or res.local.user
-          - replace it into req.user
-
-
-## Feature: Admin Coupon Management
-- *Create Coupon JUNE 29 2026*
-     - Create Event / Normal Coupon.
-     - Admin Access Only
-
-- *Get All Coupons JUNE 30 2026*
-     - Getting all types of Coupon `Event | Normal`.
-     - Admin Access Only
-
-- *Update Coupons July 1 2026*
-     - Update Multiple/Single Data
-     - Admin Access Only
-
-- *Set Status Coupons*
-     - set Coupon to Active or Not.
-     - Archive a coupon.
-     - Admin Access Only.
-
-- *Delete Coupon*
-     - Permanently Delete the coupon from the database.
-
-## UPDATE  JULY 4 2026
-- CODE: Refactor User Create Repository
-     - *Description*
-          - Whenever A User Created it will automatically create a Wallet for Points.
-          - Whenever the flow is Broken it will rollback until the flow is not broken.
-
-- Feature : Get Current Patient Points
-     - *Description*
-          - Allow an authenticated patient to view their own current reward points.
-          - This endpoint is read-only. It does not add or deduct points.
-
-## Feature :  Appointment Booking & Management System
-
-- *Create Appointment* 
-- **DATE CREATED**: JULY 5 2026
-     - Users can book an appointment for a specific service and time slot.
-     - Conflict Prevention before confirming a booking, the system checks existing appointments preventing double booking.
-
-- *Admin Oversight*
-- **DATE CREATED**: JULY 6 to 10 2026
-     - Approve pending appointments, confirming them for the customer.
-     - Reject appointments that can't be accommodated, freeing up the slot.
-- *User Self-Service*
-- **DATE CREATED**: JULY 6 to 10 2026
-     - View a list of their own appointments.
-     - View detailed information for a specific appointment 
-     - Cancel an appointment themselves
-          - Ownership validation 
-               - users can only cancel appointments that belong to them.
-          - 24-hour cancellation policy.
-               - cancellations are only allowed if the appointment is more than 24 hours away, protecting against last-minute no-shows/cancellations.
-
-
-
-
-
-
-
-# API Documentation
-## public.routes.ts 
-1. **POST /login**
-- *Description*
-     - Authenticate an existing user.
-- Request Body Example
-     - {
-     - `"email": "user@gmail.com",`
-     - `"password": "password123"`
-     - }
-- Response : Returns authenticated user token.
-
-2. **POST /forgot/password**
-- *Description*
-     - Starts the forgot password process. Sends `OTP` to user's `email`.
-
-3. **POST /verify/otp**
-- *Description*
-     - Verifies OTP during password recovery.
-- Request Body Example
-     - {
-     -   `"otp":"325123"`
-     - }
-
-4. **POST /reset/password**
-- *Description*
-     - Changes password after `OTP` verification.
-- Request Body Example
-     - {
-     -    `"newPassword":"new123",`
-     -    `"confirmPassword":"new123"`
-     - }
-
-5. **POST /resend/otp**
-- *Description*
-     - Resends OTP if the previous one expires or the user didn't get the 1st otp.
-
-## user.routes.ts
-1. **POST /create**
-- *Description*
-     - Create/Register a new user.
-- Request Body Example
-     - {
-     -    `"username":"john",`
-     -    `"email":"john@gmail.com",`
-     -    `"password":"123456",`
-     -    `"contact_number":"09xx-32xx-4xx"`
-     - }
-
-2. **PUT /update/info/:id**
-- *Description*
-     - Update user information except for password.
-- Request Body Example
-     - {
-     -    `"username":"new John Doe"`
-     - }
-
-3. **GET /profile**
-- *Description*
-     - Get logged-in user's profile.
-
-4. **POST /auth/user/send/otp**
-- *Description*
-     - Send OTP for logged-in user for password change.
-
-5. **POST /auth/user/verify/otp**
-- *Description*
-     - Verify OTP before changing password.
-- Request Body Example
-     - `{
-     -    `"otp":"322xx32"`
-     - }`
-
-6. **POST /auth/user/change/password**
-- *Description*
-     - Change password after OTP verification.
-- Request Body Example
-     - `{
-     -    `"currentPassword":"123pass",`
-     -    `"newPassword":"newpass123",`
-     -    `"confirmPassword":"newpass123"`
-     - }`
-
-7. **POST /auth/user/resend/otp**
-- *Description*
-     - Resend password-change OTP.
-
-## admin.routes.ts
-1. **GET /active/users**
-- *Description*
-     - Get all active users.
-
-2. **PATCH /restore/user/:id**
-- *Description*
-     - Restore a soft-deleted user.
-- Example:
-     - `PATCH /restore/user/10`
-
-3. **POST /admin/create**
-- *Description*
-     - Create a new admin/user account.
-- Request Body Example: `1. admin 2. user`
-     - {
-     -    `"username":"john",`
-     -    `"email":"john@gmail.com",`
-     -    `"password":"123456",`
-     -    `"contact_number":"09xx-32xx-4xx",`
-     -    `"role_id":"1 or 2"`
-     - }
-
-4. **GET /archive/users**
-- *Description*
-     - View archived/soft-deleted users.
-
-5. **PATCH /soft/delete/:id**
-- *Description*
-     - Soft delete a user.
-- Parameter
-     - `:id = user ID`
-
-6. **DELETE /hard/delete/:id**
-- *Description*
-     - Permanently remove a user.
-- Parameter
-     - `:id = user ID`
-
-## service.routes.ts
-1. **POST /create/services**
-- *Description*
-     - Create a new dental service.
-- Request Body Example
-     - {
-     -    `"title": "Orthodontics",`
-     -    `"description": "lorem ipsum, lorem ipsumlorem lorem ipsum lorem ipsum",`
-     -    `"price": 3500,`
-     -    `"image": "url in Cloudinary",`
-     -    `"image_public_id":"public id in Cloudinary",`
-     -    `"points": 5,`
-     -    `"duration_minutes":90`
-     - }
-- `Step 1 -> upload image in Cloudinary -> Get the url and public id -> paste it in Request Body.`
-
-2. **PATCH /update/services/:id**
-- *Description
-     - Update existing service information.
-- Request Body Example
-     - {
-     -    `"price":300`
-     - }
-- Parameter -> `:id = service ID`
-
-3. **PATCH /archive/services/:id**
-- *Description*
-     - Archive/SoftDelete a service.
-- Parameter -> `:id = service ID`
-
-4. **PATCH /restore/services/:id**
-- *Description
-     - Restore archived service.
-- Parameter -> `:id = service ID`
-
-5. **GET /services/archive**
-- *Description*
-     - Retrieve archived/softdeleted services.
-
-6. **GET /active/services**
-- *Description*
-     - Get all active dental services.
-
-7. **DELETE /delete/service/:id**
-- *Description*
-     - Permanently delete a service.
-- Parameter -> `:id = service ID`
-
-## Coupon Creation in admin.routes.ts
-
-1. **POST/create/coupons**
-     - *Description:*
-          - Create an Event / Normal Coupon
-     - Request Body Example of Event Coupon:
-          - {
-          - `"name":"Christmas Sale",`
-          - `"type":"EVENT",`
-          - `"discount_percent":40`
-          - }
-     - Request Body Example of Normal Coupon:
-          - {
-          - `"name":"Reward Coupon",`
-          - `"type":"NORMAL",`
-          - `"discount_percent":5,`
-          - `"required_points":30`
-          - }
-
-2. **GET /all/coupons**
-     - *Description:*
-          - get all types of coupon `admin only`.
-          - Place the `Session Token of the admin in POSTMAN or ThunderClient`.
-
-3. **PUT /update/coupons/id**
-     - *Description*
-          - Can Update all Data `Multiple/Single`.
-          - `Admin` Token Bearer Only.
-     - Request Body Example of Update:
-          - {
-          - `"name":"Christmas Promo Updated",`
-          - `"discount_percent":30`
-          - }
-
-4. **PATCH /status/coupon/id**
-     - *Description*
-          - Can Update the status of Coupon `Active/Not Active`
-          - Archive A Coupon
-          - `Admin` Token Bearer Only.
-     - Request Body Example of Status:
-          - {
-          - `"is_active":false/true`
-          - }
-
-5. **DELETE /delete/coupons/id**
-     - *Description*
-          - Delete Coupon active or Not Active
-          - Admin Only
+# 🦷 DentCare - Dental Clinic Backend
+
+A comprehensive Node.js/TypeScript-based backend system for managing dental clinic operations, patient appointments, and administrative functions.
+
+---
+
+## 📋 Table of Contents
+
+- [Quick Overview](#quick-overview)
+- [Real Project Structure](#real-project-structure)
+- [Actual Features](#actual-features)
+- [Technology Stack](#technology-stack)
+- [Installation & Setup](#installation--setup)
+- [Environment Variables](#environment-variables)
+- [Running the Application](#running-the-application)
+- [API Endpoints](#api-endpoints)
+- [Database Models](#database-models)
+- [Project Architecture](#project-architecture)
+
+---
+
+## Quick Overview
+
+**DentCare Backend** is a fully-functional dental clinic management system built with Express.js and TypeScript. It handles:
+- Patient authentication and profile management
+- Appointment scheduling and management
+- Admin operations (user management, service management)
+- Loyalty points system for patients
+- Coupon/discount management
+- In-app notifications
+- Email notifications via NodeMailer
+- Image uploads via Cloudinary
+
+---
+
+## Real Project Structure
+
+```
+src/
+├── app.ts                          # Express app configuration
+├── server.ts                       # Server entry point
+│
+├── config/                         # Configuration files
+│   ├── cloudinary.ts              # Image upload service
+│   ├── db.ts                      # Database connection
+│   └── node_mailer.ts             # Email service
+│
+├── controllers/                    # Request handlers (8 controllers)
+│   ├── admin.controller.ts
+│   ├── appointment.controller.ts
+│   ├── auth.controller.ts
+│   ├── coupon.controller.ts
+│   ├── notification.controller.ts
+│   ├── points.controller.ts
+│   ├── service.controller.ts
+│   └── user.controller.ts
+│
+├── interfaces/                     # TypeScript interfaces
+│   ├── appointment.interface.ts
+│   ├── coupon.interface.ts
+│   ├── service.interface.ts
+│   └── user.interface.ts
+│
+├── middlewares/                    # Custom middleware
+│   ├── admin.middleware.ts        # Admin authorization
+│   └── auth.middleware.ts         # JWT authentication
+│
+├── repositories/                   # Data access layer
+│   ├── admin/                     # Admin operations
+│   ├── appointment/               # Appointment CRUD (9 operations)
+│   ├── auth/                      # Auth operations
+│   ├── manage-coupon/             # Coupon operations (10 operations)
+│   ├── manage-patient-points/     # Points management (6 operations)
+│   ├── manage-services/           # Service management (9 operations)
+│   ├── manage-users/              # User management (6 operations)
+│   ├── notification/              # Notification operations (6 operations)
+│   └── user/                      # User operations (10 operations)
+│
+├── routes/                         # API route definitions
+│   ├── admin.routes.ts
+│   ├── appointment.routes.ts
+│   ├── notification.routes.ts
+│   ├── points.routes.ts
+│   ├── public.routes.ts
+│   ├── service.routes.ts
+│   └── user.routes.ts
+│
+├── services/                       # Business logic
+│   ├── admin/                     # Admin services (7 operations)
+│   ├── appointment/               # Appointment logic (9 operations)
+│   ├── auth/                      # Authentication (5 operations)
+│   ├── coupon/                    # Coupon logic (7 operations)
+│   ├── manage-services/           # Service logic (8 operations)
+│   ├── notification/              # Notification logic (6 operations)
+│   ├── points/                    # Points logic (2 operations)
+│   └── user/                      # User logic (4 operations)
+│
+├── types/                          # TypeScript types
+│   └── database.type.ts
+│
+├── utils/                          # Utility functions
+│   ├── appointment.time.ts        # Time calculations
+│   ├── init.tables.ts             # Database initialization
+│   ├── jwt.ts                     # JWT token generation
+│   └── password.bcrypt.ts         # Password hashing
+│
+└── validators/                     # Input validation
+    ├── admin.service.validator.ts
+    ├── appointment.validator.ts
+    ├── auth.validator.ts
+    ├── coupon.validator.ts
+    └── user.validator.ts
+```
+
+---
+
+## Actual Features
+
+### 1. **Authentication System** 🔐
+- User registration and login
+- JWT-based authentication
+- OTP verification for secure operations
+- Password reset with email verification
+- Forgot password functionality
+- Account lockout after failed attempts
+- Login attempt tracking
+
+### 2. **User Management** 👥
+- User profile creation and updates
+- Profile information management
+- Password change (authenticated users)
+- User archiving/soft delete
+- User restoration
+- User listing with filters
+
+### 3. **Appointment Management** 📅
+- Create appointments
+- Cancel appointments
+- View appointment details
+- Find all appointments (with filters)
+- Personal appointment history ("My appointments")
+- Approve appointments (admin)
+- Reject appointments (admin)
+- Complete appointments (admin)
+- Check appointment conflicts (prevent double booking)
+- Update appointment status
+
+### 4. **Admin Panel** ⚙️
+- Manage users (view, archive, restore, hard delete)
+- View archived users list
+- Manage services
+- Manage coupons
+- Manage patient points
+- System statistics
+
+### 5. **Service Management** 🏥
+- Create dental services
+- Update services
+- Delete services (soft delete)
+- Archive services
+- Restore archived services
+- View all services
+- View archived services list
+
+### 6. **Coupon/Discount System** 🎟️
+- Create coupons
+- Update coupon details
+- Delete coupons
+- Redeem coupons
+- Track coupon usage
+- Manage coupon status (active/inactive)
+- Apply coupons to patient accounts
+- View active coupons
+- View all coupons
+- Track patient-specific coupons
+
+### 7. **Loyalty Points System** ⭐
+- Create points transactions
+- Track patient points balance
+- Redeem points
+- Update points for patients
+- View points history
+- Client points management
+
+### 8. **Notification System** 🔔
+- Create notifications
+- Mark single notification as read
+- Mark all notifications as read
+- View notifications
+- View unread notifications
+- Track notification status
+
+### 9. **External Integrations** 🔗
+- **Cloudinary**: Image upload and management
+- **NodeMailer**: Email notifications and password reset emails
+- **JWT**: Secure token-based authentication
+
+---
+
+## Technology Stack
+
+### Backend Framework
+- **Runtime**: Node.js
+- **Language**: TypeScript
+- **Framework**: Express.js
+
+### Database
+- NEONDB
+
+### Authentication & Security
+- **JWT**: Token-based authentication
+- **Bcrypt**: Password hashing
+- **OTP**: One-time passwords for verification
+
+### External Services
+- **Cloudinary**: Cloud-based image management
+- **NodeMailer**: Email service for notifications
+
+### Development Tools
+- **TypeScript**: Type-safe JavaScript
+- **npm**: Package manager
+- **tsconfig.json**: TypeScript configuration
+
+---
+
+## Installation & Setup
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+- NEONDB 
+- Cloudinary account (for image uploads)
+- Email credentials for NodeMailer
+
+### Steps
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/teds08/Dental-Clinic-Backend.git
+cd Dental-Clinic-Backend
+```
+
+2. **Install dependencies**
+```bash
+npm install
+```
+
+3. **Create .env file** (in project root, outside src/)
+```bash
+cp .env.example .env
+# (ask the backend dev for .env)
+```
+
+4. **Start the application**
+```bash
+# Development mode with hot reload
+npm run dev
+
+# Production mode
+npm run build
+npm start
+```
+
+
+## Running the Application
+
+### Development Mode
+```bash
+npm run dev
+```
+- TypeScript files are compiled on the fly
+- Hot reload enabled
+- Server runs on `http://localhost:5000`
+
+### Production Mode
+```bash
+npm run build
+npm start
+```
+
+### Build Only
+```bash
+npm run build
+# Creates `/dist` folder with compiled JavaScript
+```
+
+---
+
+## API Endpoints
+
+### Authentication Routes (`/api/auth`)
+- `POST /register` - Register new user
+- `POST /login` - Login user
+- `POST /verify-otp` - Verify OTP
+- `POST /resend-otp` - Resend OTP
+- `POST /forgot-password` - Request password reset
+- `POST /reset-password` - Reset password with token
+
+### User Routes (`/api/user`)
+- `GET /profile` - Get user profile
+- `PUT /profile` - Update profile
+- `PUT /change-password` - Change password (authenticated)
+- `GET /all` - Get all users (admin)
+- `PUT /archive/:id` - Archive user (admin)
+- `PUT /restore/:id` - Restore user (admin)
+- `DELETE /delete/:id` - Hard delete user (admin)
+
+### Appointment Routes (`/api/appointment`)
+- `POST /` - Create appointment
+- `GET /` - Get all appointments (admin)
+- `GET /my-appointments` - Get user's appointments
+- `GET /:id` - Get appointment details
+- `PUT /:id` - Update appointment
+- `PUT /:id/cancel` - Cancel appointment
+- `PUT /:id/approve` - Approve appointment (admin)
+- `PUT /:id/reject` - Reject appointment (admin)
+- `PUT /:id/complete` - Mark as complete (admin)
+
+### Service Routes (`/api/service`)
+- `POST /` - Create service (admin)
+- `GET /` - Get all active services
+- `GET /all` - Get all services including archived (admin)
+- `PUT /:id` - Update service (admin)
+- `DELETE /:id` - Soft delete service (admin)
+- `PUT /:id/archive` - Archive service (admin)
+- `PUT /:id/restore` - Restore service (admin)
+
+### Coupon Routes (`/api/coupon`)
+- `POST /` - Create coupon (admin)
+- `GET /` - Get all coupons
+- `PUT /:id` - Update coupon (admin)
+- `DELETE /:id` - Delete coupon (admin)
+- `PUT /:id/status` - Toggle coupon status (admin)
+- `POST /:id/redeem` - Redeem coupon (user)
+
+### Points Routes (`/api/points`)
+- `GET /` - Get user's points
+- `GET /client` - Get client points balance
+
+### Notification Routes (`/api/notification`)
+- `GET /` - Get notifications
+- `GET /unread` - Get unread notifications
+- `POST /` - Create notification (admin)
+- `PUT /:id/read` - Mark notification as read
+- `PUT /mark-all-read` - Mark all as read
+
+### Admin Routes (`/api/admin`)
+- Various admin operations for managing the system
+
+---
+
+## Database Models
+
+### Collections/Tables:
+1. **Users** - User accounts with authentication
+2. **Appointments** - Appointment scheduling
+3. **Services** - Dental services offered
+4. **Coupons** - Discount coupons
+5. **PatientPoints** - Loyalty points tracking
+6. **Notifications** - User notifications
+7. **Sessions** - JWT session management
+
+---
+
+## Project Architecture
+
+### Design Pattern: Repository + Service + Controller
+
+```
+Request → Routes → Controller → Service → Repository → Database
+     ↓                  ↓
+  Middleware         Validators
+  (Auth, Admin)    (Input Validation)
+```
+
+### Layer Breakdown:
+
+**1. Controllers** - Handle HTTP requests/responses
+- Extract request data
+- Call appropriate services
+- Return JSON responses
+
+**2. Services** - Business logic layer
+- Process data
+- Call repositories for data operations
+- Handle validation
+- Manage transactions
+
+**3. Repositories** - Data access layer
+- Query database
+- Perform CRUD operations
+- Handle specific data retrieval logic
+
+**4. Middlewares** - Request processing
+- JWT authentication
+- Admin authorization
+- Error handling
+
+**5. Validators** - Input validation
+- Validate request payloads
+- Check data types and formats
+
+---
+
+## Key Implementation Details
+
+### Security Features
+✅ JWT-based authentication
+✅ Bcrypt password hashing
+✅ OTP verification
+✅ Admin role-based access control
+✅ Account lockout mechanism
+✅ Login attempt tracking
+
+### Data Management
+✅ Soft delete (archive) functionality
+✅ Restore archived records
+✅ Hard delete for permanent removal
+✅ Transaction support for coupons and points
+
+### External Integrations
+✅ Cloudinary for image management
+✅ NodeMailer for email notifications
+✅ OTP for secure verification
+
+---
+
+## Development Workflow
+
+1. Create validator for request data
+2. Create service with business logic
+3. Create repository for data access
+4. Create controller to handle requests
+5. Define routes
+6. Test endpoints
+
+---
+
+## Next Steps
+
+1. **Read the original ReadMe.md** in your repo for project-specific info
+2. **Check configuration files** (`src/config/`) for setup details
+3. **Review interfaces** (`src/interfaces/`) to understand data models
+4. **Test endpoints** using Postman or similar tool
+
+---
+
+**Last Updated:** August 2026
+**Version:** 1.0
