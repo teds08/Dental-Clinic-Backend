@@ -10,7 +10,7 @@ export class SoftDeleteRepository {
       updated_at = NOW()
     WHERE id = $1
       AND deleted_at IS NULL
-    RETURNING id, username, email
+    RETURNING id, first_name, last_name, email, contact_number, deleted_at
     `,
     [id]
   );

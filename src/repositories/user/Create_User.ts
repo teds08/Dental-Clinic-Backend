@@ -13,20 +13,22 @@ export class CreateUserRepository {
       const userResult = await client.query(
         `
         INSERT INTO users
-        (username, email, password, contact_number, role_id)
+        (first_name, last_name, email, password, contact_number, role_id)
         VALUES
-        ($1,$2,$3,$4,$5)
+        ($1,$2,$3,$4,$5,$6)
 
         RETURNING
           id,
-          username,
+          first_name,
+          last_name,
           email,
           role_id,
           created_at
         `,
 
         [
-          data.username,
+          data.first_name,
+          data.last_name,
           data.email,
           data.password,
           data.contact_number,

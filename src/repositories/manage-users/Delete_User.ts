@@ -6,7 +6,7 @@ export class HardDeleteRepository {
     `
     DELETE FROM users
     WHERE id = $1
-    RETURNING id, username, email
+    RETURNING id, first_name, last_name, email, contact_number, deleted_at
     `,
     [id]
   );

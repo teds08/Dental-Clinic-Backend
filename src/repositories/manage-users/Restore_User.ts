@@ -12,8 +12,10 @@ async restore(id: number) {
       AND deleted_at IS NOT NULL
     RETURNING
       id,
-      username,
-      email
+      first_name,
+      last_name,
+      email,
+      contact_number
     `,
     [id]
   );

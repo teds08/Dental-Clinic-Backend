@@ -11,7 +11,9 @@ export class FindAdminsRepository {
       `
       SELECT
         id,
-        username
+        first_name,
+        last_name
+        
       FROM users
       WHERE
         role_id = 1

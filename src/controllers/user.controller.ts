@@ -99,8 +99,6 @@ export class UserController {
   async changePassword(req: AuthRequest ,res: Response) {
   try {
     const userId = req.user.id;
-     console.log("userId:", userId);               // check this
-    console.log("body:", req.body); 
     const result =
       
 

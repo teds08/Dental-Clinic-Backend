@@ -18,7 +18,8 @@ export class CancelAppointmentRepository {
       RETURNING
         id,
         service_id,
-        patient_name,
+        first_name,
+        last_name,
         appointment_date,
         appointment_time,
         status,

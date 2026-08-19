@@ -37,7 +37,8 @@ export const initTables = async () => {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
-      username VARCHAR(100) NOT NULL,
+      first_name VARCHAR(100) NOT NULL,
+      last_name VARCHAR(100) NOT NULL,
       email VARCHAR(100) NOT NULL,
       password TEXT NOT NULL,
       contact_number VARCHAR(20),
@@ -170,14 +171,14 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     service_id INT NOT NULL REFERENCES services(id) ON DELETE RESTRICT,
-    patient_name VARCHAR(150) NOT NULL,
+    first_name VARCHAR(150) NOT NULL,
+    last_name VARCHAR(150) NOT NULL,
     age INT NOT NULL,
     contact_number VARCHAR(20) NOT NULL,
     appointment_date DATE NOT NULL,
     appointment_time TIME NOT NULL,
-    status VARCHAR(20) NOT NULL
-    CHECK (status IN ('PENDING','APPROVED','REJECTED','COMPLETED','CANCELLED'))
-    DEFAULT 'PENDING',
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING' 
+    CHECK (status IN ('PENDING','APPROVED','REJECTED','COMPLETED','CANCELLED')),
     coupon_id INT REFERENCES coupons(id) ON DELETE SET NULL,
     patient_coupon_id INT REFERENCES patient_coupons(id) ON DELETE SET NULL,
     original_amount DECIMAL(10,2),

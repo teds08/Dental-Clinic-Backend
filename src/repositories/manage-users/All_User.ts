@@ -5,7 +5,8 @@ export class FindAllRepository {
   const result = await pool.query(`
     SELECT
       u.id,
-      u.username,
+      u.first_name,
+      u.last_name,
       u.email,
       u.contact_number,
       u.created_at,

@@ -6,7 +6,8 @@ export class GetProfileRepository {
     `
     SELECT
       u.id,
-      u.username,
+      u.first_name,
+      u.last_name,
       u.email,
       u.contact_number,
       u.role_id,

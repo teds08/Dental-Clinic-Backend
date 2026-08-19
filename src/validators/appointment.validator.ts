@@ -10,7 +10,19 @@ export const createAppointmentValidator = z.object({
       .positive(),
 
 
-  patient_name:
+  first_name:
+    z.string()
+      .trim()
+      .min(
+        2,
+        "Patient name must be at least 2 characters."
+      )
+      .max(
+        150,
+        "Patient name cannot exceed 150 characters."
+      ),
+
+      last_name:
     z.string()
       .trim()
       .min(

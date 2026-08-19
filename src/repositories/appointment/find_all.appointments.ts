@@ -8,7 +8,8 @@ export class FindAllAppointmentsRepository {
       `
       SELECT
         a.id,
-        a.patient_name,
+        a.first_name,
+        a.last_name,
         a.age,
         a.contact_number,
         s.title AS service,
@@ -17,7 +18,7 @@ export class FindAllAppointmentsRepository {
         a.appointment_time,
         a.status,
         u.id AS account_owner_id,
-        u.username AS account_owner,
+        u.first_name AS account_owner,
         a.created_at
 
       FROM appointments a

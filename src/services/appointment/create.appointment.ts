@@ -518,7 +518,7 @@ export class CreateAppointmentService {
       let message =
 `A new appointment has been booked.
 
-Patient: ${data.patient_name}
+Patient: ${data.first_name} ${data.last_name}
 Service: ${service.title}
 Date: ${formattedDate}
 Time: ${formattedTime}

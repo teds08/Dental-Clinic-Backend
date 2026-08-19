@@ -220,7 +220,7 @@ export class CancelAppointmentService {
                     `A patient cancelled an appointment.
 
 Patient:
-${appointment.patient_name}
+${appointment.first_name} ${appointment.last_name}
 Service:
 ${appointment.title}
 Date:

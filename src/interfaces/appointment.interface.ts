@@ -3,7 +3,8 @@ export interface IAppointment {
   id?: number;
   user_id: number;
   service_id: number;
-  patient_name: string;
+  first_name: string;
+  last_name: string;
   age: number;
   contact_number: string;
   appointment_date: string;
@@ -28,7 +29,8 @@ export interface IAppointment {
 export interface ICreateAppointment {
 
   service_id: number;
-  patient_name: string;
+  first_name: string;
+  last_name: string;
   age: number;
   contact_number: string;
   appointment_date: string;
