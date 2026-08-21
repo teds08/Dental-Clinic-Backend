@@ -1,12 +1,10 @@
 import { pool } from "../../config/db";
 import { Database } from "../../types/database.type";
 
-
 export class FindAppointmentRepository {
-    constructor(private db: Database = pool) {}
+  constructor(private db: Database = pool) {}
 
   async findById(id: number) {
-
     const result = await this.db.query(
       `
       SELECT
@@ -28,18 +26,15 @@ export class FindAppointmentRepository {
 
       LIMIT 1
       `,
-      [id]
+      [id],
     );
 
     return result.rows[0];
-
   }
 
-
-  async findByIdAndUserId( appointmentId: number, userId: number) {
-
-  const result = await this.db.query(
-    `
+  async findByIdAndUserId(appointmentId: number, userId: number) {
+    const result = await this.db.query(
+      `
     SELECT
 
       a.*,
@@ -61,15 +56,9 @@ export class FindAppointmentRepository {
 
     LIMIT 1
     `,
-    [
-      appointmentId,
-      userId
-    ]
-  );
+      [appointmentId, userId],
+    );
 
-  return result.rows[0];
-
-}
-
-
+    return result.rows[0];
+  }
 }

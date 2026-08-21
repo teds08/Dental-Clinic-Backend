@@ -1,9 +1,7 @@
 import { pool } from "../../config/db";
 
 export class FindMyAppointmentsRepository {
-
   async getByUserId(userId: number) {
-
     const result = await pool.query(
       `
       SELECT
@@ -13,6 +11,7 @@ export class FindMyAppointmentsRepository {
         s.title AS service,
         a.appointment_date,
         a.appointment_time,
+        a.doctor_notes,
         a.status,
         a.created_at
 
@@ -29,11 +28,9 @@ export class FindMyAppointmentsRepository {
         a.appointment_date DESC,
         a.appointment_time DESC
       `,
-      [userId]
+      [userId],
     );
 
     return result.rows;
-
   }
-
 }

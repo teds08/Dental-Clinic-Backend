@@ -5,14 +5,15 @@ export const registerValidator = z.object({
   last_name: z.string().min(3),
   email: z.email(),
   password: z.string().min(8),
-  contact_number: z.string().regex(
+  contact_number: z
+    .string()
+    .regex(
       /^09\d{9}$/,
-      "Contact number must be a valid Philippine mobile number.")
+      "Contact number must be a valid Philippine mobile number.",
+    ),
 });
 
-
 export const updateProfileValidator = z.object({
-
   first_name: z
     .string()
     .trim()
@@ -31,7 +32,7 @@ export const updateProfileValidator = z.object({
     .string()
     .regex(
       /^09\d{9}$/,
-      "Contact number must be a valid Philippine mobile number."
+      "Contact number must be a valid Philippine mobile number.",
     )
     .optional(),
 
@@ -66,9 +67,8 @@ export const updateProfileValidator = z.object({
     .string()
     .regex(
       /^09\d{9}$/,
-      "Emergency contact number must be a valid Philippine mobile number."
+      "Emergency contact number must be a valid Philippine mobile number.",
     )
     .optional()
-    .nullable()
-
+    .nullable(),
 });

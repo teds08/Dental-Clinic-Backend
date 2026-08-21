@@ -1,11 +1,9 @@
 import { pool } from "../config/db";
 
 export const initTables = async () => {
-
-  try{
-
-      // Roles table
-  await pool.query(`
+  try {
+    // Roles table
+    await pool.query(`
     CREATE TABLE IF NOT EXISTS roles (
       role_id SERIAL PRIMARY KEY,
       role_name VARCHAR(50) NOT NULL,
@@ -13,28 +11,22 @@ export const initTables = async () => {
     )
   `);
 
-
-  // Insert default roles (only if empty)
-  await pool.query(`
+    // Insert default roles (only if empty)
+    await pool.query(`
     INSERT INTO roles (role_name, description)
     SELECT 'admin', 'Administrator role'
     WHERE NOT EXISTS (SELECT 1 FROM roles WHERE role_id = 1)
   `);
 
-  // Insert default user role (only if empty)
-  await pool.query(`
+    // Insert default user role (only if empty)
+    await pool.query(`
     INSERT INTO roles (role_name, description)
     SELECT 'user', 'Default user role'
     WHERE NOT EXISTS (SELECT 1 FROM roles WHERE role_id = 2)
   `);
 
-
-
-
-  
-
-  // Users table
-  await pool.query(`
+    // Users table
+    await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       first_name VARCHAR(100) NOT NULL,
@@ -67,9 +59,8 @@ export const initTables = async () => {
     )
   `);
 
-
-  // Session Table
-  await pool.query(`
+    // Session Table
+    await pool.query(`
     
     CREATE TABLE IF NOT EXISTS password_reset_sessions (
       session_id UUID PRIMARY KEY,
@@ -80,10 +71,8 @@ export const initTables = async () => {
     );
     `);
 
-
-
     // Services Table
-  await pool.query(`
+    await pool.query(`
 
     CREATE TABLE IF NOT EXISTS services (
       id SERIAL PRIMARY KEY,
@@ -100,7 +89,6 @@ export const initTables = async () => {
     );
     `);
 
-  
     //admin coupon creation
     await pool.query(`
       
@@ -122,11 +110,9 @@ export const initTables = async () => {
 );
       `);
 
-
     // Patient Coupon
     await pool.query(
-
-`
+      `
 CREATE TABLE IF NOT EXISTS patient_coupons (
 
     id SERIAL PRIMARY KEY,
@@ -142,11 +128,8 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
     deleted_at TIMESTAMP
 
 );
-`
-
-);
-
-
+`,
+    );
 
     // Patient Points Table
     await pool.query(`
@@ -163,8 +146,6 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
     );
       `);
 
-
-
     // Appointments Table
     await pool.query(`
       
@@ -179,6 +160,7 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
     contact_number VARCHAR(20) NOT NULL,
     appointment_date DATE NOT NULL,
     appointment_time TIME NOT NULL,
+    doctor_notes TEXT,
     status VARCHAR(20) NOT NULL DEFAULT 'PENDING' 
     CHECK (status IN ('PENDING','APPROVED','REJECTED','COMPLETED','CANCELLED')),
     coupon_id INT REFERENCES coupons(id) ON DELETE SET NULL,
@@ -194,7 +176,6 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
 );
 
     `);
-
 
     // Point Transactions Table
     await pool.query(`
@@ -222,8 +203,6 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
       
       `);
 
-
-
     // Notifications Table
     await pool.query(`
       
@@ -242,11 +221,8 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
       
       `);
 
-
     console.log("Tables  initialized");
-  }
-  catch(error){
+  } catch (error) {
     console.error("Table Error", error);
   }
-    
 };

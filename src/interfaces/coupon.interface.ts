@@ -1,5 +1,4 @@
 export interface ICoupon {
-
   id?: number;
   name: string;
   type: "EVENT" | "NORMAL";
@@ -11,11 +10,9 @@ export interface ICoupon {
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date | null;
-
 }
 
 export interface IPatientCoupon {
-
   id?: number;
   user_id: number;
   coupon_id: number;
@@ -25,5 +22,4 @@ export interface IPatientCoupon {
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date | null;
-
 }

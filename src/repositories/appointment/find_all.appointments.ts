@@ -1,19 +1,14 @@
 import { pool } from "../../config/db";
 
 export class FindAllAppointmentsRepository {
-
   async getAll() {
-
     const result = await pool.query(
       `
       SELECT
         a.id,
         a.first_name,
         a.last_name,
-        a.age,
-        a.contact_number,
         s.title AS service,
-        s.price,
         a.appointment_date,
         a.appointment_time,
         a.status,
@@ -33,11 +28,9 @@ export class FindAllAppointmentsRepository {
       ORDER BY
         a.appointment_date ASC,
         a.appointment_time ASC
-      `
+      `,
     );
 
     return result.rows;
-
   }
-
 }

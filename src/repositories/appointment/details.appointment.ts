@@ -1,9 +1,7 @@
 import { pool } from "../../config/db";
 
 export class FindAppointmentDetailsRepository {
-
   async findById(appointmentId: number, userId: number) {
-
     const result = await pool.query(
       `
       SELECT
@@ -22,6 +20,7 @@ export class FindAppointmentDetailsRepository {
         s.duration_minutes,
         a.appointment_date,
         a.appointment_time,
+        a.doctor_notes,
         a.status,
         a.created_at,
         a.updated_at
@@ -38,14 +37,9 @@ export class FindAppointmentDetailsRepository {
 
       LIMIT 1
       `,
-      [
-        appointmentId,
-        userId
-      ]
+      [appointmentId, userId],
     );
 
     return result.rows[0];
-
   }
-
 }
