@@ -10,7 +10,6 @@ export class CompleteAppointmentService {
 
     //  * Verify that the appointment exists.
     const appointment = await this.appointmentRepository.findById(appointmentId);
-    console.log("Appointment details:", appointment); // Debugging line
     
     if (!appointment) {
       throw new Error(
@@ -102,28 +101,39 @@ if (!patientPoints) {
  */
 const balanceBefore = patientPoints.total_points;
 
-// Determine earned points based on whether coupon was used
-if (appointment.patient_coupon_id === null) {
+// Determine earned points
+if (appointment.patient_coupon_id === null && appointment.coupon_id === null) {
   // No coupon used - earn full points
   earnedPoints = appointment.points_earned;
 } else {
-  // Coupon was used - no points earned (or reduced points)
+  // Coupon was used - no points earned 
   earnedPoints = 0;
 }
 
 const balanceAfter = balanceBefore + earnedPoints;
 
 /**
- * Record the transaction history (ALWAYS record, regardless of coupon).
+ * Determine earned points based on whether coupon was used
  */
-await pointTransactionRepository.create(
-  appointment.user_id,
-  appointment.id,
-  earnedPoints,
-  balanceBefore,
-  balanceAfter,
-  `Reward points earned from ${appointment.title}`
-);
+if (appointment.patient_coupon_id === null && appointment.coupon_id === null) {
+  // No coupon used - earn full points
+  earnedPoints = appointment.points_earned;
+  
+  /**
+   * Record the transaction history (ONLY when no coupon is used).
+   */
+  await pointTransactionRepository.create(
+    appointment.user_id,
+    appointment.id,
+    earnedPoints,
+    balanceBefore,
+    balanceAfter,
+    `Reward points earned from ${appointment.title}`
+  );
+} else {
+  // Coupon was used - no points earned and no transaction recorded
+  earnedPoints = 0;
+}
 
 /**
  * Update the patient's total balance.

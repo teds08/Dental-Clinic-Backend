@@ -6,7 +6,7 @@ const router = Router();
 const userController = new UserController();
 //user routes
 router.post("/create", (req, res) => userController.register(req, res));
-router.put("/update/info/:id", (req, res) => userController.update(req, res));
+router.put("/update/profile",authenticate,(req, res) => userController.update(req, res));
 router.get("/profile",authenticate,(req, res) => userController.profile(req, res));
 
 // Authorized User password change routes

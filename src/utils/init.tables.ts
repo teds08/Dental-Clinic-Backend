@@ -42,6 +42,11 @@ export const initTables = async () => {
       email VARCHAR(100) NOT NULL,
       password TEXT NOT NULL,
       contact_number VARCHAR(20),
+      date_of_birth DATE,
+      address TEXT,
+      gender VARCHAR(20),
+      emergency_contact VARCHAR(150),
+      emergency_contact_number VARCHAR(20),
       role_id INT DEFAULT 2,
       
       otp_code VARCHAR(10),
@@ -130,13 +135,10 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
     status VARCHAR(20) NOT NULL
     CHECK (status IN ('UNUSED','USED','EXPIRED'))
     DEFAULT 'UNUSED',
-    redeemed_at TIMESTAMP NOT NULL
-    DEFAULT NOW(),
+    redeemed_at TIMESTAMP NOT NULL DEFAULT NOW(),
     used_at TIMESTAMP,
-    created_at TIMESTAMP NOT NULL
-    DEFAULT NOW(),
-    updated_at TIMESTAMP NOT NULL
-    DEFAULT NOW(),
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_at TIMESTAMP
 
 );

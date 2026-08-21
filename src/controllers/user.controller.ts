@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CreateUserService , UpdateUserService, GetProfileService , AuthenticatedPasswordChangeService  } from "../services/user/index";
-import { registerValidator } from "../validators/user.validator";
+import { registerValidator, updateProfileValidator } from "../validators/user.validator";
 import { AuthRequest } from "../middlewares/auth.middleware";
 
 
@@ -34,11 +34,31 @@ export class UserController {
   }
 
 
-  async update(req: Request, res: Response) {
-  const id = Number(req.params.id);
-  const result = await updateUserService.updateUser(id, req.body);
+  async update(req: AuthRequest, res: Response) {
 
-  res.json(result);
+  try {
+
+    const userId = req.user.id;
+    const validated = updateProfileValidator.parse(req.body);
+    const updatedUser = await updateUserService.updateUser(userId,validated);
+
+    return res.status(200).json({
+
+      message: "Profile updated successfully.",
+      data: updatedUser
+
+    });
+
+  } catch (error: any) {
+
+    return res.status(400).json({
+
+      message: error.message
+
+    });
+
+  }
+
 }
 
 
