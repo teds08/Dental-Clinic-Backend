@@ -203,6 +203,27 @@ CREATE TABLE IF NOT EXISTS patient_coupons (
       
       `);
 
+    // Testimonials
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS testimonials (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+    rating INT NOT NULL
+        CHECK (rating >= 1 AND rating <= 5),
+    testimonial TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL
+        CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED'))
+        DEFAULT 'PENDING',
+
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMP NULL
+);
+    
+    `);
+
     // Notifications Table
     await pool.query(`
       
