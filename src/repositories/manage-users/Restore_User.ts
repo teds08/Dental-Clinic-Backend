@@ -1,9 +1,9 @@
 import { pool } from "../../config/db";
 
 export class RestoreUserRepository {
-async restore(id: number) {
-  const result = await pool.query(
-    `
+  async restore(id: number) {
+    const result = await pool.query(
+      `
     UPDATE users
     SET
       deleted_at = NULL,
@@ -14,12 +14,11 @@ async restore(id: number) {
       id,
       first_name,
       last_name,
-      email,
-      contact_number
+      updated_at
     `,
-    [id]
-  );
+      [id],
+    );
 
-  return result.rows[0];
-}
+    return result.rows[0];
+  }
 }
