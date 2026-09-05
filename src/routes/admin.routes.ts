@@ -2,7 +2,7 @@ import { Router } from "express";
 import { authenticate } from "../middlewares/auth.middleware";
 import { adminOnly } from "../middlewares/admin.middleware";
 import { AdminController } from "../controllers/admin/admin.controller";
-import { CouponController } from "../controllers/coupon.controller";
+import { CouponController } from "../controllers/coupon/coupon.controller";
 
 const router = Router();
 const adminController = new AdminController();
