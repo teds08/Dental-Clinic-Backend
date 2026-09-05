@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { TestimonialController } from "../controllers/testimonial.controller";
+import { TestimonialController } from "../controllers/testimonial/testimonial.controller";
 
 import { authenticate } from "../middlewares/auth.middleware";
 import { adminOnly } from "../middlewares/admin.middleware";
