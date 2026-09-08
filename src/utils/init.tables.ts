@@ -83,6 +83,17 @@ export const initTables = async () => {
       image_public_id TEXT,
       points INT NOT NULL DEFAULT 0,
       duration_minutes INT NOT NULL,
+      category VARCHAR(30) NOT NULL
+    CHECK (
+      category IN (
+        'Preventive',
+        'Restorative',
+        'Cosmetic',
+        'Surgical',
+        'Orthodontics',
+        'Prosthetic'
+      )
+    ),
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW(),
       deleted_at TIMESTAMP NULL

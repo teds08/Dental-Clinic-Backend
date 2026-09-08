@@ -1,17 +1,41 @@
 import { z } from "zod";
 
+const serviceCategories = [
+  "Preventive",
+  "Restorative",
+  "Cosmetic",
+  "Surgical",
+  "Orthodontics",
+  "Prosthetic",
+] as const;
+
 export const CreateServiceValidator = z.object({
-  title: z.string().min(3),
-  description: z.string().min(10),
-  price: z.coerce.number().positive(),
-  image: z.string().url(),
-  image_public_id: z.string().min(1),
-  points: z.number().min(0),
+  image: z.string().trim().min(1, "Image is required."),
+
+  title: z
+    .string()
+    .trim()
+    .min(1, "Title is required.")
+    .max(255, "Title cannot exceed 255 characters."),
+
+  description: z.string().trim().min(1, "Description is required."),
+
+  price: z.coerce.number().positive("Price must be greater than 0."),
+
+  points: z.coerce
+    .number()
+    .int("Points must be a whole number.")
+    .min(0, "Points cannot be negative.")
+    .default(0),
+
   duration_minutes: z.coerce
     .number()
-    .int()
-    .min(1, "Duration must be at least 1 minute.")
-    .max(480, "Duration cannot exceed 480 minutes."),
+    .int("Duration must be a whole number.")
+    .positive("Duration must be greater than 0."),
+
+  image_public_id: z.string().trim(),
+
+  category: z.enum(serviceCategories),
 });
 
 export const UpdateServiceValidator = z.object({
