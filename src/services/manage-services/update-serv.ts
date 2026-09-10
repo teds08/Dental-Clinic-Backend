@@ -23,6 +23,7 @@ export class UpdateService {
       "price",
       "image",
       "image_public_id",
+      "icon",
       "points",
       "duration_minutes",
       "category",

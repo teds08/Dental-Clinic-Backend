@@ -6,8 +6,6 @@ export class CreateService {
 
   async createService(data: IService) {
     const result = await this.repo.create(data);
-
-    console.log("Service created successfully:", result);
     return {
       message: "Service created successfully",
       service: result,

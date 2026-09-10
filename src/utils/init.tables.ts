@@ -81,6 +81,7 @@ export const initTables = async () => {
       description TEXT NOT NULL,
       price NUMERIC(10,2) NOT NULL,
       image_public_id TEXT,
+      icon VARCHAR(100) NOT NULL,
       points INT NOT NULL DEFAULT 0,
       duration_minutes INT NOT NULL,
       category VARCHAR(30) NOT NULL

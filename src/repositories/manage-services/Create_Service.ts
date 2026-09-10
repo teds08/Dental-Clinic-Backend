@@ -9,6 +9,7 @@ INSERT INTO services
 (
 image,
 image_public_id,
+icon,
 title,
 description,
 price,
@@ -18,7 +19,7 @@ category
 )
 
 VALUES
-($1,$2,$3,$4,$5,$6,$7,$8)
+($1,$2,$3,$4,$5,$6,$7,$8,$9)
 
 RETURNING *
 `,
@@ -26,6 +27,7 @@ RETURNING *
       [
         data.image,
         data.image_public_id,
+        data.icon,
         data.title,
         data.description,
         data.price,

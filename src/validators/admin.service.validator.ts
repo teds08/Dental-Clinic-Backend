@@ -34,6 +34,11 @@ export const CreateServiceValidator = z.object({
     .positive("Duration must be greater than 0."),
 
   image_public_id: z.string().trim(),
+  icon: z
+    .string()
+    .trim()
+    .min(1, "Icon is required.")
+    .max(100, "Icon cannot exceed 100 characters."),
 
   category: z.enum(serviceCategories),
 });
@@ -43,6 +48,12 @@ export const UpdateServiceValidator = z.object({
   description: z.string().min(10).optional(),
   price: z.coerce.number().positive().optional(),
   image: z.string().url().optional(),
+  icon: z
+    .string()
+    .trim()
+    .min(1, "Icon cannot be empty.")
+    .max(100, "Icon cannot exceed 100 characters.")
+    .optional(),
   points: z.coerce.number().min(1).optional(),
   duration_minutes: z.coerce
     .number()
@@ -50,6 +61,7 @@ export const UpdateServiceValidator = z.object({
     .min(1, "Duration must be at least 1 minute.")
     .max(480, "Duration cannot exceed 480 minutes.")
     .optional(),
+  category: z.enum(serviceCategories).optional(),
 });
 
 export const adminCreateUserValidator = z.object({

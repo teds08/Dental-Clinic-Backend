@@ -5,6 +5,7 @@ export interface IService {
   price: number;
   image: string;
   image_public_id: string;
+  icon: string;
   points: number;
   duration_minutes: number;
 
@@ -28,6 +29,7 @@ export interface IUpdateService {
   price?: number;
   image?: string;
   image_public_id?: string;
+  icon?: string;
   points?: number;
   duration_minutes?: number;
 
