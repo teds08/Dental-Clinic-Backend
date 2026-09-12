@@ -8,9 +8,21 @@ export interface IUpcomingAppointment {
   status: string;
 }
 
+export interface IRevenueHistory {
+  month: string;
+  revenue: number;
+}
+
 export interface IAdminDashboard {
   total_patients: number;
   appointments_last_month: number;
   upcoming_appointments: IUpcomingAppointment[];
   monthly_revenue: number;
+  revenue_history: IRevenueHistory[];
+  appointment_status: IAppointmentStatus[];
+}
+
+export interface IAppointmentStatus {
+  status: string;
+  count: number;
 }
