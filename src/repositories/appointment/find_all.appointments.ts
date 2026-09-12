@@ -1,36 +1,67 @@
 import { pool } from "../../config/db";
+import { Database } from "../../types/database.type";
 
 export class FindAllAppointmentsRepository {
-  async getAll() {
-    const result = await pool.query(
+  constructor(private db: Database = pool) {}
+
+  async getAll(status?: string, page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+
+    const result = await this.db.query(
       `
       SELECT
         a.id,
+        a.user_id,
+        a.service_id,
         a.first_name,
         a.last_name,
-        s.title AS service,
+        a.age,
+        a.contact_number,
+        s.title AS service_name,
         a.appointment_date,
         a.appointment_time,
+        a.doctor_notes,
         a.status,
-        u.id AS account_owner_id,
-        u.first_name AS account_owner,
-        a.created_at
-
+        a.patient_coupon_id,
+        a.coupon_id,
+        a.original_amount,
+        a.discount_amount,
+        a.final_amount,
+        a.points_earned,
+        a.created_at,
+        a.updated_at
       FROM appointments a
-      
-      INNER JOIN users u
-        ON a.user_id = u.id
       INNER JOIN services s
-        ON a.service_id = s.id
-
+        ON s.id = a.service_id
       WHERE a.deleted_at IS NULL
-
+        AND s.deleted_at IS NULL
+        AND ($1::VARCHAR IS NULL OR a.status = $1)
       ORDER BY
         a.appointment_date ASC,
-        a.appointment_time ASC
+        a.appointment_time ASC,
+        a.id ASC
+      LIMIT $2
+      OFFSET $3
       `,
+      [status ?? null, limit, offset],
     );
 
-    return result.rows;
+    const countResult = await this.db.query(
+      `
+      SELECT COUNT(*)::int AS total
+      FROM appointments a
+      INNER JOIN services s
+        ON s.id = a.service_id
+      WHERE a.deleted_at IS NULL
+        AND s.deleted_at IS NULL
+        AND ($1::VARCHAR IS NULL OR a.status = $1)
+      `,
+      [status ?? null],
+    );
+
+    return {
+      appointments: result.rows,
+      total: countResult.rows[0].total,
+    };
   }
 }
