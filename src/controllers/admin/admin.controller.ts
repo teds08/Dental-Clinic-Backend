@@ -5,6 +5,7 @@ import { hardDeleteUser } from "./handlers/hardDeleteUser";
 import { restoreUser } from "./handlers/restoreUser";
 import { createUser } from "./handlers/createUser";
 import { getArchivedUsers } from "./handlers/getArchivedUsers";
+import { getDashboard } from "./handlers/admin-dashboard";
 
 export class AdminController {
   async getAll(req: Request, res: Response) {
@@ -29,5 +30,9 @@ export class AdminController {
 
   async findArchivedUsers(req: Request, res: Response) {
     return getArchivedUsers(req, res);
+  }
+
+  async getDashboard(req: Request, res: Response) {
+    return getDashboard(req, res);
   }
 }

@@ -11,10 +11,12 @@ import testimonialRoutes from "./routes/testimonial.routes";
 
 const app = express();
 
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3001",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 app.use("/api", userRoutes);
@@ -25,6 +27,5 @@ app.use("/api", pointsRoutes);
 app.use("/api", appointmentRoutes);
 app.use("/api", notifRoutes);
 app.use("/api", testimonialRoutes);
-
 
 export default app;

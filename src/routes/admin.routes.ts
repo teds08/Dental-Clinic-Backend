@@ -50,4 +50,12 @@ router.post("/redeem/coupon", authenticate, (req, res) =>
   couponController.redeemCoupon(req, res),
 );
 
+// DashBoard
+router.get(
+  "/data/dashboard",
+  authenticate,
+  adminOnly,
+  adminController.getDashboard,
+);
+
 export default router;
