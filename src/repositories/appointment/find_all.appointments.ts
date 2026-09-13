@@ -4,8 +4,9 @@ import { Database } from "../../types/database.type";
 export class FindAllAppointmentsRepository {
   constructor(private db: Database = pool) {}
 
-  async getAll(status?: string, page = 1, limit = 10) {
+  async getAll(status?: string, search?: string, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
+    const searchValue = search?.trim() || null;
 
     const result = await this.db.query(
       `
@@ -36,14 +37,21 @@ export class FindAllAppointmentsRepository {
       WHERE a.deleted_at IS NULL
         AND s.deleted_at IS NULL
         AND ($1::VARCHAR IS NULL OR a.status = $1)
+        AND (
+          $2::VARCHAR IS NULL
+          OR a.first_name ILIKE '%' || $2 || '%'
+          OR a.last_name ILIKE '%' || $2 || '%'
+          OR a.contact_number ILIKE '%' || $2 || '%'
+          OR s.title ILIKE '%' || $2 || '%'
+        )
       ORDER BY
         a.appointment_date ASC,
         a.appointment_time ASC,
         a.id ASC
-      LIMIT $2
-      OFFSET $3
+      LIMIT $3
+      OFFSET $4
       `,
-      [status ?? null, limit, offset],
+      [status ?? null, searchValue, limit, offset],
     );
 
     const countResult = await this.db.query(
@@ -55,8 +63,15 @@ export class FindAllAppointmentsRepository {
       WHERE a.deleted_at IS NULL
         AND s.deleted_at IS NULL
         AND ($1::VARCHAR IS NULL OR a.status = $1)
+        AND (
+          $2::VARCHAR IS NULL
+          OR a.first_name ILIKE '%' || $2 || '%'
+          OR a.last_name ILIKE '%' || $2 || '%'
+          OR a.contact_number ILIKE '%' || $2 || '%'
+          OR s.title ILIKE '%' || $2 || '%'
+        )
       `,
-      [status ?? null],
+      [status ?? null, searchValue],
     );
 
     return {

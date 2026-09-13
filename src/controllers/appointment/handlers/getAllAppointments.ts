@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { FindAllAppointmentsService } from "../../../services/appointment/index";
+
 const service = new FindAllAppointmentsService();
 
 export async function getAllAppointments(req: Request, res: Response) {
@@ -7,13 +8,16 @@ export async function getAllAppointments(req: Request, res: Response) {
     const status =
       typeof req.query.status === "string" ? req.query.status : undefined;
 
+    const search =
+      typeof req.query.search === "string" ? req.query.search : undefined;
+
     const page =
       typeof req.query.page === "string" ? Number(req.query.page) : 1;
 
     const limit =
       typeof req.query.limit === "string" ? Number(req.query.limit) : 10;
 
-    const result = await service.getAppointments(status, page, limit);
+    const result = await service.getAppointments(status, search, page, limit);
 
     const totalPages = Math.ceil(result.total / limit);
 
