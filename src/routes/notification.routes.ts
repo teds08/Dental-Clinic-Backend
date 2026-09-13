@@ -19,4 +19,8 @@ router.patch("/read-all", authenticate, (req, res) =>
   notif.markAllAsRead(req, res),
 );
 
+router.delete("/delete/notify/:id", authenticate, (req, res) =>
+  notif.deleteNotification(req, res),
+);
+
 export default router;

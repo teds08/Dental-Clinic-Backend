@@ -4,6 +4,7 @@ import { getMyNotifications } from "./handlers/getMyNotifications";
 import { getUnreadCount } from "./handlers/getUnreadCount";
 import { markAsRead } from "./handlers/markAsRead";
 import { markAllAsRead } from "./handlers/markAllAsRead";
+import { deleteNotification } from "./handlers/delete.notify";
 
 export class NotificationController {
   async getMyNotifications(req: AuthRequest, res: Response) {
@@ -20,5 +21,9 @@ export class NotificationController {
 
   async markAllAsRead(req: AuthRequest, res: Response) {
     return markAllAsRead(req, res);
+  }
+
+  async deleteNotification(req: AuthRequest, res: Response) {
+    return deleteNotification(req, res);
   }
 }
