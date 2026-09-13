@@ -1,46 +1,73 @@
-import {
-  UpdateServiceRepository,
-  FindServiceRepository,
-} from "../../repositories/manage-services/index";
 import cloudinary from "../../config/cloudinary";
+import { IUpdateService } from "../../interfaces/service.interface";
+import { UpdateServiceRepository } from "../../repositories/manage-services";
 
 export class UpdateService {
   private repo = new UpdateServiceRepository();
-  private findRepo = new FindServiceRepository();
 
-  async updateService(id: number, data: any) {
-    const old = await this.findRepo.findById(id);
+  async updateService(id: number, data: IUpdateService, imageBuffer?: Buffer) {
+    const existingService = await this.repo.findById(id);
 
-    if (!old) {
-      throw new Error("Service not found");
+    if (!existingService) {
+      throw new Error("Service not found.");
     }
 
-    // Only process provided fields
-    const updateData: Record<string, any> = {};
-    const allowedFields = [
-      "title",
-      "description",
-      "price",
-      "image",
-      "image_public_id",
-      "icon",
-      "points",
-      "duration_minutes",
-      "category",
-    ];
+    let image = existingService.image;
+    let imagePublicId = existingService.image_public_id;
 
-    allowedFields.forEach((field) => {
-      if (data[field] !== undefined) {
-        updateData[field] = data[field];
-      }
+    if (imageBuffer) {
+      const uploadResult = await new Promise<{
+        secure_url: string;
+        public_id: string;
+      }>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "services",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error || !result) {
+              reject(error || new Error("Cloudinary upload failed."));
+              return;
+            }
+
+            resolve({
+              secure_url: result.secure_url,
+              public_id: result.public_id,
+            });
+          },
+        );
+
+        uploadStream.end(imageBuffer);
+      });
+
+      image = uploadResult.secure_url;
+      imagePublicId = uploadResult.public_id;
+    }
+
+    const updatedService = await this.repo.update(id, {
+      ...data,
+      image,
+      image_public_id: imagePublicId,
     });
 
-    // Delete old image if new one provided
-    if (updateData.image && old.image_public_id) {
-      await cloudinary.uploader.destroy(old.image_public_id);
+    if (!updatedService) {
+      throw new Error("Failed to update service.");
     }
 
-    // Update DB (only returns changed fields)
-    return await this.repo.update(id, updateData);
+    if (
+      imageBuffer &&
+      existingService.image_public_id &&
+      existingService.image_public_id !== imagePublicId
+    ) {
+      await cloudinary.uploader.destroy(existingService.image_public_id, {
+        resource_type: "image",
+      });
+    }
+
+    return {
+      message: "Service updated successfully.",
+      service: updatedService,
+    };
   }
 }

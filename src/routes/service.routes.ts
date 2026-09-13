@@ -2,16 +2,27 @@ import { Router } from "express";
 import { authenticate } from "../middlewares/auth.middleware";
 import { adminOnly } from "../middlewares/admin.middleware";
 import { ServiceController } from "../controllers/service/service.controller";
+import { upload } from "../middlewares/upload.middleware";
 
 const router = Router();
 const serviceController = new ServiceController();
 
-router.post("/create/services", authenticate, adminOnly, (req, res) =>
-  serviceController.create(req, res),
+router.post(
+  "/create/service",
+  authenticate,
+  adminOnly,
+  upload.single("image"),
+  (req, res) => serviceController.create(req, res),
 );
-router.patch("/update/services/:id", authenticate, adminOnly, (req, res) =>
-  serviceController.update(req, res),
+
+router.patch(
+  "/update/service/:id",
+  authenticate,
+  adminOnly,
+  upload.single("image"),
+  (req, res) => serviceController.update(req, res),
 );
+
 router.patch("/archive/services/:id", authenticate, adminOnly, (req, res) =>
   serviceController.archive(req, res),
 );

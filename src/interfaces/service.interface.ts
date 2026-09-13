@@ -22,6 +22,23 @@ export interface IService {
   deleted_at?: Date | null;
 }
 
+export interface ICreateService {
+  title: string;
+  description: string;
+  price: number;
+  icon: string;
+  points: number;
+  duration_minutes: number;
+
+  category:
+    | "Preventive"
+    | "Restorative"
+    | "Cosmetic"
+    | "Surgical"
+    | "Orthodontics"
+    | "Prosthetic";
+}
+
 export interface IUpdateService {
   id?: number;
   title?: string;
