@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const admin_middleware_1 = require("../middlewares/admin.middleware");
+const service_controller_1 = require("../controllers/service/service.controller");
+const upload_middleware_1 = require("../middlewares/upload.middleware");
+const router = (0, express_1.Router)();
+const serviceController = new service_controller_1.ServiceController();
+router.post("/create/service", auth_middleware_1.authenticate, admin_middleware_1.adminOnly, upload_middleware_1.upload.single("image"), (req, res) => serviceController.create(req, res));
+router.patch("/update/service/:id", auth_middleware_1.authenticate, admin_middleware_1.adminOnly, upload_middleware_1.upload.single("image"), (req, res) => serviceController.update(req, res));
+router.patch("/archive/services/:id", auth_middleware_1.authenticate, admin_middleware_1.adminOnly, (req, res) => serviceController.archive(req, res));
+router.patch("/restore/services/:id", auth_middleware_1.authenticate, admin_middleware_1.adminOnly, (req, res) => serviceController.restore(req, res));
+router.get("/services/archive", auth_middleware_1.authenticate, admin_middleware_1.adminOnly, (req, res) => serviceController.archiveList(req, res));
+router.get("/active/services", (req, res) => serviceController.getAll(req, res));
+router.delete("/delete/service/:id", auth_middleware_1.authenticate, admin_middleware_1.adminOnly, (req, res) => serviceController.hardDelete(req, res));
+exports.default = router;

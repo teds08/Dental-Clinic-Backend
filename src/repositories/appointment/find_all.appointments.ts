@@ -19,6 +19,7 @@ export class FindAllAppointmentsRepository {
         a.age,
         a.contact_number,
         s.title AS service_name,
+        s.deleted_at AS service_deleted_at,
         a.appointment_date,
         a.appointment_time,
         a.doctor_notes,
@@ -35,7 +36,6 @@ export class FindAllAppointmentsRepository {
       INNER JOIN services s
         ON s.id = a.service_id
       WHERE a.deleted_at IS NULL
-        AND s.deleted_at IS NULL
         AND ($1::VARCHAR IS NULL OR a.status = $1)
         AND (
           $2::VARCHAR IS NULL
@@ -61,7 +61,6 @@ export class FindAllAppointmentsRepository {
       INNER JOIN services s
         ON s.id = a.service_id
       WHERE a.deleted_at IS NULL
-        AND s.deleted_at IS NULL
         AND ($1::VARCHAR IS NULL OR a.status = $1)
         AND (
           $2::VARCHAR IS NULL

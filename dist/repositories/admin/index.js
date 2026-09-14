@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.GetAppointmentStatusRepository = exports.GetMonthlyRevenueRepository = exports.GetUpcomingAppointmentsRepository = exports.GetAppointmentCountRepository = exports.GetPatientCountRepository = exports.FindAdminsRepository = void 0;
+var find_admins_1 = require("./find.admins");
+Object.defineProperty(exports, "FindAdminsRepository", { enumerable: true, get: function () { return find_admins_1.FindAdminsRepository; } });
+var get_patient_count_repository_1 = require("./get-patient-count.repository");
+Object.defineProperty(exports, "GetPatientCountRepository", { enumerable: true, get: function () { return get_patient_count_repository_1.GetPatientCountRepository; } });
+var get_appointment_count_repository_1 = require("./get-appointment-count.repository");
+Object.defineProperty(exports, "GetAppointmentCountRepository", { enumerable: true, get: function () { return get_appointment_count_repository_1.GetAppointmentCountRepository; } });
+var get_upcoming_appointments_repository_1 = require("./get-upcoming-appointments.repository");
+Object.defineProperty(exports, "GetUpcomingAppointmentsRepository", { enumerable: true, get: function () { return get_upcoming_appointments_repository_1.GetUpcomingAppointmentsRepository; } });
+var get_monthly_revenue_repository_1 = require("./get-monthly-revenue.repository");
+Object.defineProperty(exports, "GetMonthlyRevenueRepository", { enumerable: true, get: function () { return get_monthly_revenue_repository_1.GetMonthlyRevenueRepository; } });
+var get_appointment_status_repository_1 = require("./get-appointment-status.repository");
+Object.defineProperty(exports, "GetAppointmentStatusRepository", { enumerable: true, get: function () { return get_appointment_status_repository_1.GetAppointmentStatusRepository; } });

@@ -18,6 +18,8 @@ export interface IAppointment {
   discount_amount: number;
   final_amount: number;
   points_earned: number;
+
+  service_deleted_at?: Date | null;
 }
 
 export interface ICreateAppointment {

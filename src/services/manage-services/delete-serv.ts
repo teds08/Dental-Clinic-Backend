@@ -7,29 +7,32 @@ export class DeletePermanentService {
   async deleteService(id: number) {
     const service = await this.repo.findById(id);
 
-    console.log("Service found for deletion:", service);
-
     if (!service) {
       throw new Error("Service not found");
     }
 
-    if (service.image_public_id) {
-      const cloudinaryResult = await cloudinary.uploader.destroy(
-        service.image_public_id,
-        {
-          resource_type: "image",
-        },
-      );
+    let deleted;
 
-      console.log("Cloudinary delete result:", cloudinaryResult);
+    try {
+      deleted = await this.repo.delete(id);
+    } catch (error: any) {
+      if (error.code === "23001") {
+        throw new Error(
+          "This service cannot be permanently deleted because it is associated with existing appointments. Archive it instead.",
+        );
+      }
+
+      throw error;
     }
-
-    const deleted = await this.repo.delete(id);
-
-    console.log("Database delete result:", deleted);
 
     if (!deleted) {
       throw new Error("Failed to permanently delete service");
+    }
+
+    if (service.image_public_id) {
+      await cloudinary.uploader.destroy(service.image_public_id, {
+        resource_type: "image",
+      });
     }
 
     return {
