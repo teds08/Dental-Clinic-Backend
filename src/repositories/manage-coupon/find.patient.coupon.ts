@@ -1,59 +1,47 @@
 import { pool } from "../../config/db";
 import { Database } from "../../types/database.type";
 
-
 export class FindPatientCouponRepository {
-constructor(private db: Database = pool) {}
+  constructor(private db: Database = pool) {}
 
-
- async findById(patientCouponId: number) {
-
+  async findById(patientCouponId: number) {
     const result = await this.db.query(
+      `
+      SELECT
+        pc.id,
+        pc.user_id,
+        pc.patient_coupon_id,
+        pc.status,
+        pc.redeemed_at,
+        pc.used_at,
+        pc.created_at,
+        pc.updated_at,
+        pc.deleted_at,
 
-        `
-        SELECT
+        c.name,
+        c.description,
+        c.type,
+        c.discount_percent,
+        c.required_points,
+        c.is_active,
+        c.start_date,
+        c.end_date
 
-          pc.id,
-          pc.user_id,
-          pc.patient_coupon_id,
-          pc.status,
-          pc.redeemed_at,
-          pc.used_at,
-          pc.created_at,
-          pc.updated_at,
-          pc.deleted_at,
+      FROM patient_coupons pc
 
-          c.name,
-          c.type,
-          c.discount_percent,
-          c.required_points,
-          c.is_active,
-          c.start_date,
-          c.end_date
+      INNER JOIN coupons c
+        ON c.id = pc.patient_coupon_id
 
-        FROM patient_coupons pc
+      WHERE
+        pc.id = $1
 
-        INNER JOIN coupons c
-          ON c.id = pc.patient_coupon_id
+      AND pc.deleted_at IS NULL
 
-        WHERE
-          pc.id = $1
-
-        AND pc.deleted_at IS NULL
-
-        LIMIT 1
-        `,
-
-        [
-          patientCouponId
-        ]
-
-      );
-
+      LIMIT 1
+      `,
+      [patientCouponId],
+    );
 
     return result.rows[0];
-
   }
-
-
 }

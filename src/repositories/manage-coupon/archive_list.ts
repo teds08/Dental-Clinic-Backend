@@ -1,7 +1,7 @@
 import { pool } from "../../config/db";
 import { Database } from "../../types/database.type";
 
-export class FindAllCouponRepository {
+export class FindArchivedCouponRepository {
   constructor(private db: Database = pool) {}
 
   async findAll() {
@@ -18,10 +18,14 @@ export class FindAllCouponRepository {
         start_date,
         end_date,
         created_at,
-        updated_at
+        updated_at,
+        deleted_at
 
       FROM coupons
-      ORDER BY created_at DESC
+
+      WHERE deleted_at IS NOT NULL
+
+      ORDER BY deleted_at DESC
       `,
     );
 

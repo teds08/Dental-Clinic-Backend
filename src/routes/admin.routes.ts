@@ -40,6 +40,9 @@ router.post("/create/coupons", authenticate, adminOnly, (req, res) =>
 router.get("/all/coupons", authenticate, adminOnly, (req, res) =>
   couponController.getAllCoupons(req, res),
 );
+router.get("/archive/coupons", authenticate, adminOnly, (req, res) =>
+  couponController.getArchivedCoupons(req, res),
+);
 router.put("/update/coupons/:id", authenticate, adminOnly, (req, res) =>
   couponController.updateCoupon(req, res),
 );

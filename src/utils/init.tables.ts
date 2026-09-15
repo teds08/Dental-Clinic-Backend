@@ -103,14 +103,14 @@ export const initTables = async () => {
 
     //admin coupon creation
     await pool.query(`
-      
-    CREATE TABLE IF NOT EXISTS coupons (
+  CREATE TABLE IF NOT EXISTS coupons (
 
     id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
+    description VARCHAR(500),
     type VARCHAR(20) NOT NULL CHECK (type IN ('EVENT','NORMAL')),
     discount_percent NUMERIC(5,2) NOT NULL
-    CHECK (discount_percent > 0 AND discount_percent <= 100),
+      CHECK (discount_percent > 0 AND discount_percent <= 100),
     required_points INT,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     start_date DATE,
@@ -119,8 +119,8 @@ export const initTables = async () => {
     updated_at TIMESTAMP DEFAULT NOW(),
     deleted_at TIMESTAMP
 
-);
-      `);
+  );
+`);
 
     // Patient Coupon
     await pool.query(

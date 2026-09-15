@@ -1,6 +1,7 @@
 export interface ICoupon {
   id?: number;
   name: string;
+  description?: string | null;
   type: "EVENT" | "NORMAL";
   discount_percent: number;
   required_points?: number | null;
@@ -10,6 +11,17 @@ export interface ICoupon {
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date | null;
+}
+
+export interface IAdminUpdateCoupon {
+  name?: string;
+  description?: string | null;
+  type?: "EVENT" | "NORMAL";
+  discount_percent?: number;
+  required_points?: number | null;
+  is_active?: boolean;
+  start_date?: string | null;
+  end_date?: string | null;
 }
 
 export interface IPatientCoupon {

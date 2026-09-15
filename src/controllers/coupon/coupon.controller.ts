@@ -6,6 +6,7 @@ import { updateCoupon } from "./handlers/updateCoupon";
 import { updateCouponStatus } from "./handlers/updateCouponStatus";
 import { deleteCoupon } from "./handlers/deleteCoupon";
 import { redeemCoupon } from "./handlers/redeemCoupon";
+import { getArchivedCoupons } from "./handlers/getArchivedCoupons";
 
 export class CouponController {
   async createCoupon(req: Request, res: Response) {
@@ -26,6 +27,10 @@ export class CouponController {
 
   async deleteCoupon(req: Request, res: Response) {
     return deleteCoupon(req, res);
+  }
+
+  async getArchivedCoupons(req: Request, res: Response) {
+    return getArchivedCoupons(req, res);
   }
 
   async redeemCoupon(req: AuthRequest, res: Response) {
