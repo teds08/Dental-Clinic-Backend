@@ -26,3 +26,17 @@ export interface IAppointmentStatus {
   status: string;
   count: number;
 }
+
+export interface IAdminUpdateUser {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  password?: string;
+  contact_number?: string;
+  role_id?: number;
+  date_of_birth?: string;
+  address?: string;
+  gender?: string;
+  emergency_contact?: string;
+  emergency_contact_number?: string;
+}

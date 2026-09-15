@@ -5,3 +5,4 @@ export { RestoreUserAdminService } from "./restore_user";
 export { AdminCreateUserService } from "./create_user";
 export { FindArchiveUsersService } from "./archive.list_user";
 export { AdminDashboardService } from "./admin-dashboard";
+export { AdminUpdateUserService } from "./update_user";

@@ -21,6 +21,9 @@ router.post("/admin/create", authenticate, adminOnly, (req, res) =>
 router.get("/archive/users", authenticate, adminOnly, (req, res) =>
   adminController.findArchivedUsers(req, res),
 );
+router.patch("/admin/update/:id", authenticate, adminOnly, (req, res) =>
+  adminController.updateUser(req, res),
+);
 
 //delete routes
 router.patch("/soft/delete/:id", authenticate, adminOnly, (req, res) =>
